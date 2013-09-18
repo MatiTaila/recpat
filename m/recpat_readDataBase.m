@@ -1,1 +1,1 @@
-[numData ,txtData , rawData] = xlsread('data.xls');
+[numData ,txtData , rawData] = xlsread('../../data.xls');

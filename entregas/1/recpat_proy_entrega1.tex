@@ -92,48 +92,56 @@ Mat\'ias \textsc{Tailani\'an}
 
 El problema se enmarca dentro del proyecto \emph{``Incorporación de datos imagenológicos a las bases de datos fenotípicas de bovinos para la identificación de genes significativos para mejorar las características reproductivas y de calidad de carne''}, del que formamos parte.\\
 
-El problema que se atacará en este proyecto es un problema de gran inter
+El problema que se atacará en este proyecto es un problema de gran interés en la industria cárnica, ya que una mejora genética del ganado producirá un aumento en la calidad de la carne, que repercutirá directamente en la economía del país.
 
 \section*{Objetivo}
 
-El objetivo de este proyecto es el estudio de la correlación entre datos fenotípicos y genotípicos de ganado y de esta manera identificar cuáles son los genes más significativos que afectan directamente en las características de caldiad de carne y reproductivas. 
+El objetivo principal del proyecto es la investigación en técnicas que permitan
+contribuir con la predicción de fertilidad de rodeo lechero y la calidad de la carne
+integrando técnicas de reconocimiento de patrones sobre datos de alta dimensión.\\
 
-Qué se quiere hacer a nivel general, y una idea de qué metas se desean cumplir (por ejemplo, lograr un cierto desempeño en la clasificación para el problema propuesto).\\
-Ejemplo: Se desea clasificar automáticamente frutas a partir de fotos. La idea es lograr una tasa de error menor al 10\%.
+Más concretamente se estudiará la correlación entre datos fenotípicos y genotípicos de ganado para de esta manera identificar cuáles son los genes más significativos que afectan directamente en la calidad de carne y las características reproductivas.
 
 \section*{Enfoque}
 
-El cómo se quiere lograr el objetivo. Técnicas, algoritmos, métodos, lista tentativa de características de los datos que puedan ser relevantes en la clasificación.\\
-Por ejemplo:\\
-    Se considerarán las características ancho, alto y área (a,b,h) de la silueta de la fruta, luego se estimarán las densidades condicionales de P(a,b,h|c) para cada clase c utilizando ventanas de Parzen, y finalmente se aplicará un clasificador bayesiano para estimar la clase de un nuevo dato.
+Las técnicas y algoritmos que se utilizarán no están del todo definidos. El estimador que se utilizará como base de referencia es el de Máxima Verosimilitud Restringida (\emph{REML}), que es el estimador clásico que usan los genetistas.\\
+
+Las características fenotípicas a priori más relevantes que se intentarán correlacionar con los datos genotípicos son las el área del ojo de bife, el porcentaje de grasa intramuscular y el peso. Estas características son las que están más relacionadas con la calidad de la carne. Se cuenta con más de 40 características por lo cual será necesario realizar una etapa de selección de las características más relevantes.
 
 \section*{Alcance}
 
-El alcance del proyecto no está muy definido... deberíamos dejarlo medio vago, onda intentar relacionar 
-
-Qué tipo de simplificaciones o suposiciones se van a hacer para abarcar el problema. También suele ser útil dejar claro lo que no se va a hacer.\\
-Por ejemplo, Se trabajará con fotos tomadas en condiciones de luz controladas, con un fondo monocromo, donde sea fácil distinguir sin equivocación la silueta de la fruta.
+El alcance del proyecto pretende realizar una primera aproximación a las técnicas de correlacionado de datos de alta dimensión, apuntando a la obtención de un resultado preliminar sobre cuáles son los genes más significativos para la mejora de las características reproductivas y la calidad de la carne.
 
 \section*{Datos}
+A lo largo de los últimos años varios grupos de Facultad de Veterinaria han creado bases de datos con información fenotípica y molecular relacionada con la calidad cárnica y la fertilidad bovina aplicada a la producción lechera. Este análisis requiere el relevamiento masivo de datos y su procesamiento en forma exhaustiva y eficiente. \\
 
-Se tiene disponible una base de datos de alrededor de 700 individuos, donde para cada uno de ellos se tienen 189 características. Una de las dificultades que presenta este trabajo es que los tipos de datos de las características son muy variados. Algunos de los datos son cuantitativos y varían en diferentes escalas de valores, mientras que otros son cualitativos. 
-
-Es necesario tener disponible un conjunto de datos de entrenamiento y/o validación, o en su defecto tener los medios disponibles para obtenerlos (por ejemplo, si son fotos, una cámara). Este punto es particularmente importante de aclarar para evaluar la factibilidad de proyectos originales propuestos por los estudiantes.
-
+Se tiene disponible una base de datos de alrededor de 700 individuos, donde para cada uno de ellos se tienen en el entorno de 45 características. Una de las dificultades que presenta este trabajo es que los tipos de datos de las características son muy variados. Algunos de los datos son cuantitativos y varían en diferentes escalas de valores, mientras que otros son cualitativos. A su vez se está analizando la posibilidad de incluir otra base de datos de similares características, pero de vacas lecheras.
 \section*{Cronograma}
 
-El curso prevé tres instancias de evaluación del proyecto:\\
+Se planea realizar las siguientes actividades para las instancias:
+\begin{itemize}
+	\item \emph{Entrega de avance intermedio}
+	\begin{itemize}
+		\item Obtención y puesta a punto de las bases de datos
+		\item Estudio del estado del arte en técnicas de reconocimiento de patrones en alta dimensión.
+	\end{itemize}
+	\item \emph{Entrega de reporte final}
+	\begin{itemize}
+		\item Implementación
+	\end{itemize}
+\end{itemize}
 
-    Entrega de la propuesta inicial\\
-    Entrega de avance intermedio\\
-    Entrega de reporte final\\
-    Defensa pública\\
+\begin{thebibliography}{99}
 
-Las fechas de estas instancias están publicadas en el EVA del curso. Lo que se solicita en este apartado es una estimación, como mínimo, de qué se pretende tener logrado en las instancias 2 y 3.
-Bibliografía\\
+\bibitem{bib:Eileen}Eileen Armstrong Reborati: Detección y análisis de genes asociados a la calidadd e carne en bovinos, En \emph{Tesis de doctorado}, Madrid 2011.
 
-Aquí deberían listarse aquellos artículos o fuentes que faciliten a los docentes la rápida familiarización con el problema y las técnicas a utilizar (si acaso las hubiera que no están cubiertas en el curso) a los efectos de evaluar la factibilidad del proyecto. \\
+\bibitem{bib:paper_rico}Jennifer L. Gill, Stephen C. Bishop, Caroline McCorquodale, John L. Williams, Pamela Wiener: Associations between single nucleotide polymorphisms in multiple candidate genes and carcass and meat quality traits in a commercial Angus-cross population, En \emph{Elsevier}, July 2010.
+
+\end{thebibliography}
 
 
+%la búsqueda de marcadores moleculares para el mejoramiento genético del ganado.
+
+%interrelación de estas variables productivas y reproductivas
 
 \end{document}
