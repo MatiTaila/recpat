@@ -1,0 +1,133 @@
+%\documentclass[spanish,12pt,a4paper,titlepage,twoside,openright]{scrbook}
+\documentclass[12pt,a4paper,titlepage]{report}
+%\usepackage[latin1]{inputenc}
+\usepackage[utf8]{inputenc}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{float}
+\usepackage{wrapfig}
+\usepackage{multirow}
+\usepackage{caption}
+\usepackage[spanish,es-nodecimaldot]{babel}
+\usepackage[dvips]{hyperref}
+\usepackage{amssymb}
+\usepackage{listings}
+\usepackage{epsfig}
+\usepackage{amsmath}
+\usepackage{array}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
+\usepackage{hhline}
+\usepackage{cancel}
+
+\usepackage[Sonny]{fncychap}
+%\usepackage[Glenn]{fncychap}
+%\usepackage[Conny]{fncychap}
+%\usepackage[Rejne]{fncychap}
+%\usepackage[Bjarne]{fncychap}
+
+\usepackage{subfiles}
+\usepackage{framed}
+\usepackage{appendix}
+\setlength{\topmargin}{-1.5cm}
+\setlength{\textheight}{25cm}
+\setlength{\oddsidemargin}{0.3cm} 
+\setlength{\textwidth}{15cm}
+\setlength{\columnsep}{0cm}
+%\setkomafont{disposition}{\normalfont\bfseries}
+\captionsetup{tablename=Tabla}
+
+\ChNameVar{\bfseries\LARGE\sf}\ChNumVar{\fontsize{62}{65}\selectfont}
+\ChTitleVar{\bfseries\LARGE\sf} \ChRuleWidth{2pt} \ChNameAsIs
+\ChTitleAsIs
+\renewcommand\FmN[4]{}
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+\newcommand{\bs}{\boldsymbol}
+
+\begin{document}
+
+
+\begin{titlepage}
+\begin{center}
+\vspace{2cm}
+\textsc{\LARGE Facultad de Ingenier\'ia de la Universidad de la Rep\'ublica}\\[1.5cm]
+\vspace{2cm}
+\textsc{\Large Introducción al Reconocimiento de Patrones  \\[1cm]  Curso 2013}\\[0.5cm]
+\vspace{2cm}
+% Title
+\HRule \\[0.4cm]
+{ \huge \bfseries Entrega 1}\\[0.4cm]
+\HRule \\[1.5cm]
+\vspace{2cm}
+% Author and supervisor
+\begin{minipage}{0.4\textwidth}
+\begin{flushleft} \large
+\emph{Autores:}\\
+José Luis \textsc{Nunes}\\
+Leonardo \textsc{Pujadas} \\
+Mat\'ias \textsc{Tailani\'an}
+\end{flushleft}
+\end{minipage}
+\begin{minipage}{0.4\textwidth}
+\begin{flushright} \large
+\end{flushright}
+\end{minipage}
+
+\vspace{3cm}
+
+\vfill
+\begin{figure} [h!]
+\centering
+\subfloat{\includegraphics[width=0.25\textwidth]{./pics/logoIIE_transparente.png}}\hspace{1cm}
+\subfloat{\includegraphics[width=0.15\textwidth]{./pics/logo_fing_transparente.png}}\hspace{1cm}
+\subfloat{\includegraphics[width=0.15\textwidth]{./pics/logo_udelar.png}}
+\end{figure}
+
+% Bottom of the page
+{\large \today}
+\end{center}
+\end{titlepage}
+
+\chapter{Descripción del problema}
+
+El problema se enmarca dentro del proyecto \emph{``Incorporación de datos imagenológicos a las bases de datos fenotípicas de bovinos para la identificación de genes significativos para mejorar las características reproductivas y de calidad de carne''}, del que formamos parte.
+
+\section*{Objetivo}
+
+El objetivo de este proyecto es el estudio de la correlación entre datos fenotípicos y genotípicos de ganado, con el objetivo de identificar cuáles son los genes más significativos que afectan directamente en las características de caldiad de carne y reproductivas. 
+
+Qué se quiere hacer a nivel general, y una idea de qué metas se desean cumplir (por ejemplo, lograr un cierto desempeño en la clasificación para el problema propuesto).\\
+Ejemplo: Se desea clasificar automáticamente frutas a partir de fotos. La idea es lograr una tasa de error menor al 10\%.
+
+\section*{Enfoque}
+
+El cómo se quiere lograr el objetivo. Técnicas, algoritmos, métodos, lista tentativa de características de los datos que puedan ser relevantes en la clasificación.\\
+Por ejemplo:\\
+    Se considerarán las características ancho, alto y área (a,b,h) de la silueta de la fruta, luego se estimarán las densidades condicionales de P(a,b,h|c) para cada clase c utilizando ventanas de Parzen, y finalmente se aplicará un clasificador bayesiano para estimar la clase de un nuevo dato.
+
+\section*{Alcance}
+
+Qué tipo de simplificaciones o suposiciones se van a hacer para abarcar el problema. También suele ser útil dejar claro lo que no se va a hacer.\\
+Por ejemplo, Se trabajará con fotos tomadas en condiciones de luz controladas, con un fondo monocromo, donde sea fácil distinguir sin equivocación la silueta de la fruta.
+
+\section*{Datos}
+
+Es necesario tener disponible un conjunto de datos de entrenamiento y/o validación, o en su defecto tener los medios disponibles para obtenerlos (por ejemplo, si son fotos, una cámara). Este punto es particularmente importante de aclarar para evaluar la factibilidad de proyectos originales propuestos por los estudiantes.
+
+\section*{Cronograma}
+
+El curso prevé tres instancias de evaluación del proyecto:\\
+
+    Entrega de la propuesta inicial\\
+    Entrega de avance intermedio\\
+    Entrega de reporte final\\
+    Defensa pública\\
+
+Las fechas de estas instancias están publicadas en el EVA del curso. Lo que se solicita en este apartado es una estimación, como mínimo, de qué se pretende tener logrado en las instancias 2 y 3.
+Bibliografía\\
+
+Aquí deberían listarse aquellos artículos o fuentes que faciliten a los docentes la rápida familiarización con el problema y las técnicas a utilizar (si acaso las hubiera que no están cubiertas en el curso) a los efectos de evaluar la factibilidad del proyecto. \\
+
+
+
+\end{document}
