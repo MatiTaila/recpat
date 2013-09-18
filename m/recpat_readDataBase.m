@@ -1,0 +1,1 @@
+[numData ,txtData , rawData] = xlsread('data.xls');
