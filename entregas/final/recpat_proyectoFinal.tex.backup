@@ -20,7 +20,6 @@
 \usepackage{hhline}
 \usepackage{cancel}
 \usepackage{fancyvrb}
-\usepackage{lmodern}
 
 \usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
@@ -50,59 +49,32 @@
 
 \fvset{frame=single,framesep=1mm,fontfamily=courier,fontsize=\scriptsize,numbers=left,framerule=.3mm,numbersep=1mm,commandchars=\\\{\}}
 
-
-
-
-\newcommand{\bcol}{\begin{columns}[T]}
-\newcommand{\ecol}{\end{columns}}
-\newcommand{\col}[1][0.5]{\column{#1\textwidth}}
-
-
 \begin{document}
-
 
 \begin{titlepage}
 \begin{center}
-\vspace{2cm}
+\vspace{3cm}
 \textsc{\LARGE Facultad de Ingenier\'ia de la Universidad de la Rep\'ublica}\\[1.5cm]
 \vspace{2cm}
 \textsc{\Large Introducción al Reconocimiento de Patrones  \\[1cm]  Curso 2013}\\[0.5cm]
 \vspace{2cm}
 % Title
-\HRule \\[0.4cm]
+\vspace{.7cm}
+\HRule \\[1cm]
 { \huge \bfseries Proyecto final}\\[0.4cm]
-\HRule \\[1.5cm]
+\HRule \\[1cm]
 \vspace{2cm}
 % Author and supervisor
 
-\bcol
-	\col{20pt}
-	Hola
-	\col{20pt}
-	Hola 2
-\ecol
+\begin{center}
+\begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
+\emph{Autores:} & \hfill \emph{Tutores:}\\
+Josué Luiz \textsc{Ñuñez} &  \hfill Federico \textsc{Lecumberry}\\
+Mat\'ias \textsc{Tailani\'an} & \hfill Ignacio \textsc{Ramirez}
+\end{tabular}
+\end{center}
 
-
-\begin{minipage}{0.4\textwidth}
-\begin{flushleft} \large
-\emph{Autores:}\\[.5cm]
-Josué Luiz \textsc{Ñuñez} \\ 
-Mat\'ias \textsc{Tailani\'an}
-\end{flushleft}
-\begin{flushright} \large
-\emph{Autores:}\\[.5cm]
-Josué Luiz \textsc{Ñuñez} \\ 
-Mat\'ias \textsc{Tailani\'an}
-\end{flushright}
-
-
-\end{minipage}
-\begin{minipage}{0.4\textwidth}
-\begin{flushright} \large
-\end{flushright}
-\end{minipage}
-
-\vspace{2cm}
+\vspace{1cm}
 
 \vfill
 \begin{figure} [h!]
@@ -116,6 +88,75 @@ Mat\'ias \textsc{Tailani\'an}
 {\large \today}
 \end{center}
 \end{titlepage}
+
+\tableofcontents
+
+\chapter{Introducción}
+A lo largo de los años se ha intentado relacionar ciertas características fenotípicas del ganado bovino con algunos indicadores genéticos. Es un problema actualmente abierto de gran interés mundial y Uruguay, siendo un país esencialmente ganadero, no puede estar ajeno. Desde hace varios años se viene desarrollando una línea de investigación relacionada con la genética molecular de la calidad de la carne bovina en el área de Genética de la Facultad de Veterinaria. Se ha realizado un abordaje desde diferentes puntos de vista, como la caracterización de genes conocidos en rodeos vacunos de nuestro país, o la búsqueda y análisis de nuevos genes asociados a la calidad de carne tanto bovina como ovina \cite{bib:eileen}.\\
+
+Obtener una correlación entre la información genética y la capacidad reprodutiva de bovinos, el impacto en la calidad de la leche y de la carne de los animales de nuestros rodeos tendría un alto impacto en la producción. A lo largo de los últimos años en Facultad de Veterinaria se han creado bases de datos con información fenotípica y genotípica relacionada conla calidad cárnica y la fertilidad bovina aplicada a la producción lechera. En esta oportunidad se trabajará con una base de datos confeccionada en nuestro país durante el año 2009, provista por la veterinaria Dra. Ana Meikle.
+
+\chapter{Base de datos}
+Para lo que sigue de este trabajo es importante conocer la base de datos con la que se trabajará, y realizar una breve descripción de las características relevantes.\\
+
+La base de datos consta de información de un seguimiento realizado durante 9 meses sobre 891 vacas de 7 tambos diferentes y consiste en las características detalladas a continuación.
+
+\section{Características fenotípicas}
+\begin{itemize}
+	\item Edad.
+	\item Condición corporal (BCS) desde 30 días previos al parto hasta 120 días pos-parto, con una frecuencia de al menos una vez cada 30 días. Se utilizó la escala de 5 puntos (1=flaca, 5= gorda).
+	\item Cantidad de partos (Cantidad de lactancias). Es un indicador importante que tiene que ver con la historia y desgaste de la vaca.
+	\item Anestro: es la cantidad de días que pasaron desde el parto hasta el reinicio. El reinicio se define como el día en que la progesterona aumenta a un nivel determinado, indicando que la vaca volvió a ciclar.
+	\item Intervalo entre partos. Es la cantidad de días que pasan entre 2 partos consecutivos (válido solamente para vacas multíparas). Para maximizar la producción de leche lo que se busca es que la vaca quede peñada una vez al año, es decir un intervalo entre partos de 365 aproximadamente.
+	\item Secado: la cantidad de días que pasan entre el último día que se le saca leche a la vaca y el parto. Es válido solo para vacas multíparas. Es un indicador de cuanto tiempo se dejó descansar a la vaca antes del parto. Cuanto más tiempo tiene, se prepara el cuerpo y llega en mejor forma.
+	\item Concentración de progesterona hasta los 60 días posparto.
+	\item Promedio de cantidad de grasa en la leche durante los primeros 100 días posparto.
+	\item Promedio de cantidad de leche durante los primeros 100 días posparto.
+\end{itemize}
+
+
+\section{Características genotípicas - Determinación de polimorfismos (SNPs)}
+Se extrajo ADN y se obtuvieron muestras de buena calidad. Se determinó el genotipo clasificándolo en 3 clases: ``AA'', ``AB'' y ``BB''.
+
+
+	\section{Introducción}
+
+	\section{Masajeo}
+
+\chapter{Técnicas utilizadas}
+	
+	\section{Naive Bayes}
+	
+	\section{C 4.5}
+	
+	\section{K-nn}
+	
+	\section{PCA}
+	
+	\section{LDA?}
+	
+	\section{NN?}
+	
+	\section{SVM?}
+
+
+
+
+
+
+
+
+\begin{thebibliography}{99}
+\begin{small}
+
+\bibitem{bib:eileen}Eileen Armstrong Reborati, Detección y análisis de genes asociados a la calidad de la carne en bovinos, \emph{Tesis de doctorado}, Madrid, 2011.
+
+
+\end{small}
+\end{thebibliography}
+
+
+
 
 
 \end{document}

@@ -89,16 +89,53 @@ Mat\'ias \textsc{Tailani\'an} & \hfill Ignacio \textsc{Ramirez}
 \end{center}
 \end{titlepage}
 
+\tableofcontents
 
 \chapter{Introducción}
+El objetivo principal del proyecto es la investigación en técnicas que permitan contribuir con la predicción de fertilidad de rodeo lechero y la calidad de la carne integrando técnicas de reconocimiento de patrones sobre datos de alta dimensión.\\
+
+A lo largo de los años se ha intentado relacionar ciertas características fenotípicas del ganado bovino con algunos indicadores genéticos. Es un problema actualmente abierto de gran interés mundial y Uruguay, siendo un país esencialmente ganadero, no puede estar ajeno. Desde hace varios años se viene desarrollando una línea de investigación relacionada con la genética molecular de la calidad de la carne bovina en el área de Genética de la Facultad de Veterinaria. Se ha realizado un abordaje desde diferentes puntos de vista, como la caracterización de genes conocidos en rodeos vacunos de nuestro país, o la búsqueda y análisis de nuevos genes asociados a la calidad de carne tanto bovina como ovina \cite{bib:eileen}.\\
+
+Obtener una correlación entre la información genética y la capacidad reprodutiva de bovinos, el impacto en la calidad de la leche y de la carne de los animales de nuestros rodeos tendría un alto impacto en la producción. A lo largo de los últimos años en Facultad de Veterinaria se han creado bases de datos con información fenotípica y genotípica relacionada conla calidad cárnica y la fertilidad bovina aplicada a la producción lechera. En esta oportunidad se trabajará con una base de datos confeccionada en nuestro país durante el año 2009, provista por la veterinaria Dra. Ana Meikle.
 
 \chapter{Base de datos}
+Para lo que sigue de este trabajo es importante conocer la base de datos con la que se trabajará, y realizar una breve descripción de las características relevantes.\\
 
-	\section{Introducción}
+La base de datos consta de información de un seguimiento realizado durante 9 meses sobre 891 vacas de 7 tambos diferentes y consiste en las características detalladas a continuación.
 
-	\section{Masajeo}
+\section{Características fenotípicas}
+\begin{itemize}
+	\item Edad.
+	\item Condición corporal (BCS) desde 30 días previos al parto hasta 120 días pos-parto, con una frecuencia de al menos una vez cada 30 días. Se utilizó la escala de 5 puntos (1=flaca, 5= gorda).
+	\item Cantidad de partos (Cantidad de lactancias). Es un indicador importante que tiene que ver con la historia y desgaste de la vaca.
+	\item Anestro: es la cantidad de días que pasaron desde el parto hasta el reinicio. El reinicio se define como el día en que la progesterona aumenta a un nivel determinado, indicando que la vaca volvió a ciclar.
+	\item Intervalo entre partos. Es la cantidad de días que pasan entre 2 partos consecutivos (válido solamente para vacas multíparas). Para maximizar la producción de leche lo que se busca es que la vaca quede peñada una vez al año, es decir un intervalo entre partos de 365 aproximadamente.
+	\item Secado: la cantidad de días que pasan entre el último día que se le saca leche a la vaca y el parto. Es válido solo para vacas multíparas. Es un indicador de cuanto tiempo se dejó descansar a la vaca antes del parto. Cuanto más tiempo tiene, se prepara el cuerpo y llega en mejor forma.
+	\item Servicios: Cantidad de inceminaciones realizadas para lograr la preñez.
+	\item Concentración de progesterona hasta los 60 días posparto.
+	\item Promedio de cantidad de grasa en la leche durante los primeros 100 días posparto.
+	\item Promedio de cantidad de leche durante los primeros 100 días posparto.
+\end{itemize}
+
+\section{Características genotípicas - Determinación de polimorfismos (SNPs)}
+Se extrajo ADN y se obtuvieron muestras de buena calidad. En la figura \ref{fig:genotipo} se muestra el procedimiento realizado para caracterizar el gen IGF-I bovino en 3 clases: ``AA'', ``AB'' y ``BB''. 
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.8\textwidth]{./pics/genotipos.png}
+	\caption{Determinación del genotipo}
+	\label{fig:genotipo}
+\end{figure}
+
+El eje de las ordenadas muestra la fluorescencia normalizada al genotipo ``AA''. Se puede observar que el genotipo ``AB'' se encuentra por encima del genotipo normalizado, mientras que el genotipo ``BB'' por debajo.
+
+\section{Resumen}
+En primer lugar fue necesario entender e interiorizarse con la base de datos, los conceptos y la terminología específica del problema. La lectura e interpretación de los datos no resulta para nada sencilla, por lo que se realizaron dos reuniones con la Dr. Ana Meikle, encargada de la investigación que llevó a cabo la confección de la base asociada a la producción de leche y fertilidad del ganado bovino. En ambas reuniones se buscó depurar la base con el fin de quitar información repetida y no relevante para el estudio. También se estableció un orden de relevancia en las características fenotípicas.\\
+
+En resumen contamos con una base de datos acotada y ``limpia'' con varias características fenotípicas que se quieren correlacionar con los genotipos de cada individuo. En particular se abordará el problema como un trabajo de clasificación, tomando los genotipos como clases.
 
 \chapter{Técnicas utilizadas}
+	En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
 	
 	\section{Naive Bayes}
 	
@@ -121,6 +158,15 @@ Mat\'ias \textsc{Tailani\'an} & \hfill Ignacio \textsc{Ramirez}
 
 
 
+\begin{thebibliography}{99}
+\begin{small}
+
+\bibitem{bib:eileen}Eileen Armstrong Reborati, Detección y análisis de genes asociados a la calidad de la carne en bovinos, \emph{Tesis de doctorado}, Madrid, 2011.
+\bibitem{bib:weka}Mark Hall, Eibe Frank, Geoffrey Holmes, Bernhard Pfahringer, Peter Reutemann, Ian H. Witten (2009); The WEKA Data Mining Software: An Update; SIGKDD Explorations, Volume 11.
+\bibitem{bib:REML}Meyer, K. (2007). WOMBAT – A tool for mixed model analyses in quantitative genetics by REML, J. Zhejiang Uni.
+
+\end{small}
+\end{thebibliography}
 
 
 
