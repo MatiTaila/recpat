@@ -9,9 +9,9 @@
 \usepackage{multirow}
 \usepackage{caption}
 \usepackage[spanish,es-nodecimaldot]{babel}
-\usepackage[dvips]{hyperref}
+%\usepackage[dvips]{hyperref}
 \usepackage{amssymb}
-\usepackage{listings}
+%\usepackage{listings}
 \usepackage{epsfig}
 \usepackage{amsmath}
 \usepackage{array}
@@ -21,7 +21,7 @@
 \usepackage{cancel}
 \usepackage{fancyvrb}
 
-\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 \usepackage[Sonny]{fncychap}
 %\usepackage[Glenn]{fncychap}
@@ -152,7 +152,7 @@ Con esta batería de clasificadores se cubre un amplio espectro y se utilizan al
 Para analizar los resultados se utilizan las implementaciones provistan en el software \textbf{Weka} \cite{bib:weka}.
 
 \section{Primera etapa}
-Se utiliza el clasificador compuesto \verb AttributeSelectedClassifier  que aplica una técnica de selección de características antes de entrenar al clasificador. Se logra entonces una reducción de la dimensionalidad. La estrategia elegida para la selección de características se realiza utilizando el enfoque \verb wrapper , que evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada para estimar la precisión del esquema de aprendizaje. El clasificador utilizado para estimar esta precisión es un árbol de decisión \textbf{C 4.5}.\\
+Se utiliza el clasificador compuesto AttributeSelectedClassifier  que aplica una técnica de selección de características antes de entrenar al clasificador. Se logra entonces una reducción de la dimensionalidad. La estrategia elegida para la selección de características se realiza utilizando el enfoque wrapper , que evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada para estimar la precisión del esquema de aprendizaje. El clasificador utilizado para estimar esta precisión es un árbol de decisión \textbf{C 4.5}.\\
 
 En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
 
@@ -175,17 +175,206 @@ Una vez hecha la extracción de características, y así la reducción de dimens
 
 \subsection{K-nn}
 
+\section{Tercera etapa - extración de características}
+
+En la tercera etapa buscaremos realizar extracción de características con el fin de reducir la dimensionalidad y  buscar características con mayor discriminación. 
+
+Esto tiene como fin reducir los niveles de redundancia entre las características, visualizar características latentes significativas y generar para el futuro una mayor compresión en el proceso de generación de datos. 
+
+\subsection{PCA}
+
+El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar la base de vectores que mejor exprese la distribución de los datos en el espacio completo. Es similar a encontrar las componentes ortogonales de un vector en un espacio, o lo que es igual, encontrar un conjunto de vectores que combinados en forma lineal representen los elementos. Estos elementos son los vectores propios de la matriz de covarianza correspondiente al espacio original.\\
+
+%([O esto que es más coloquial] El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar un subespacio principal en el cual se maximice la varianza de los datos proyectados. Ordenaremos las variables de acuerdo a la cantidad de varianza que concentran quedándonos con las más significativas.)
+
+\begin{figure} [H]
+\centering
+  \subfloat[Características 1-2-3]{\label{fig:pca123} 
+  		\includegraphics[width=.5\textwidth]{pics/pca123}} 
+  \subfloat[Características 1-4-3]{\label{fig:pca143} 
+  		\includegraphics[width=.5\textwidth]{pics/pca143}} \\
+  \caption{Datos procesados con el algorítmo PCA} 
+  \label{pcas}
+\end{figure}
+
+A simple vista resulta muy difícil reconocer algún tipo de estructura sobre los datos, con lo cual es de esperar que la clasificación no entregue mejores resultados de los ya vistos. La distribución de los datos en ambos subespacios (ver figura \ref{pcas}) resulta prácticamente randómica y es imposible identificar visualmente algún cluster por clases. (Esto es medio trucho, pero sincero...)\\
+
+\begin{wrapfigure}{l}{0.6\textwidth}
+	\vspace{-20pt}
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{pics/varianzaPCA}
+	\end{center}
+	\vspace{-20pt}
+	\caption{Varianza vs Componentes}
+	\label{varianzaPCA}
+	\vspace{-10pt}
+\end{wrapfigure}
+
+En la figura \ref{varianzaPCA} vemos la varianza en función de los componentes, podemos apreciar como la caída es abrupta y tiene sentido trabajar en el espacio de los primeros tres componentes que acumulan la mayor cantidad de varianza.\\
+
+Resultados de aplicar los clasificadores a los datos procesados con PCA: (Los escribo asi nomás para que queden registrados ya que no tengo las tablitas esas que a vos tanto te gustan...)\\
+
+============================================\\
+Naive Bayes:
+
+Time taken to build model: 0.02 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         163               39.372  \%
+Incorrectly Classified Instances       251               60.628  \%
+Kappa statistic                          0.0906
+Mean absolute error                      0.4084
+Root mean squared error                  0.5064
+Relative absolute error                 91.8883 \%
+Root relative squared error            107.4298 \%
+Coverage of cases (0.95 level)          92.9952 \%
+Mean rel. region size (0.95 level)      86.2319 \%
+Total Number of Instances              414     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,138    0,145    0,322      0,138    0,193      -0,010   0,540     0,367     1
+                 0,616    0,558    0,356      0,616    0,451      0,055    0,563     0,365     2
+                 0,428    0,207    0,509      0,428    0,465      0,232    0,672     0,526     3
+Weighted Avg.    0,394    0,303    0,395      0,394    0,369      0,093    0,592     0,419     
+
+=== Confusion Matrix ===
+
+  a  b  c   <-- classified as
+ 19 93 26 |  a = 1
+ 22 85 31 |  b = 2
+ 18 61 59 |  c = 3
+============================================\\
+C 4.5:\\
+
+Number of Leaves  : 	35
+
+Size of the tree : 	69
 
 
+Time taken to build model: 0.03 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         177               42.7536 %
+Incorrectly Classified Instances       237               57.2464 %
+Kappa statistic                          0.1413
+Mean absolute error                      0.3913
+Root mean squared error                  0.5372
+Relative absolute error                 88.0331 %
+Root relative squared error            113.9586 %
+Coverage of cases (0.95 level)          78.5024 %
+Mean rel. region size (0.95 level)      73.9936 %
+Total Number of Instances              414     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,362    0,297    0,379      0,362    0,370      0,066    0,553     0,396     1
+                 0,428    0,264    0,447      0,428    0,437      0,165    0,601     0,425     2
+                 0,493    0,297    0,453      0,493    0,472      0,192    0,614     0,416     3
+Weighted Avg.    0,428    0,286    0,426      0,428    0,427      0,141    0,589     0,413     
+
+=== Confusion Matrix ===
+
+  a  b  c   <-- classified as
+ 50 42 46 |  a = 1
+ 43 59 36 |  b = 2
+ 39 31 68 |  c = 3
+ ============================================\\
+k-NN:\\
+
+IB1 instance-based classifier
+using 1 inverse-distance-weighted nearest neighbour(s) for classification
 
 
-	\section{PCA}
+Time taken to build model: 0 seconds
+
+=== Stratified cross-validation ===
+=== Summary ===
+
+Correctly Classified Instances         179               43.2367 %
+Incorrectly Classified Instances       235               56.7633 %
+Kappa statistic                          0.1486
+Mean absolute error                      0.387 
+Root mean squared error                  0.6013
+Relative absolute error                 87.0681 %
+Root relative squared error            127.5413 %
+Coverage of cases (0.95 level)          48.0676 %
+Mean rel. region size (0.95 level)      39.694  %
+Total Number of Instances              414     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,420    0,319    0,397      0,420    0,408      0,100    0,553     0,399     1
+                 0,428    0,279    0,434      0,428    0,431      0,149    0,578     0,444     2
+                 0,449    0,254    0,470      0,449    0,459      0,198    0,619     0,419     3
+Weighted Avg.    0,432    0,284    0,434      0,432    0,433      0,149    0,584     0,421     
+
+=== Confusion Matrix ===
+
+  a  b  c   <-- classified as
+ 58 45 35 |  a = 1
+ 44 59 35 |  b = 2
+ 44 32 62 |  c = 3
+
+  ============================================\\
+ 	
+\subsection{LDA}
+
+El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases.\\
+Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.8\textwidth]{pics/lda}
+	\caption{Proyeccion de los datos aplicando LDA}
+	\label{fig:lda}
+\end{figure}
+
+Nuevamente resulta imposible obtener algun resultado visualizando la distribución de los datos, de todas formas probaremos nuestros clasificadores sobre la base proyectada.\\ 
+
+Resultados de aplicar los clasificadores a los datos procesados con LDA: (Los escribo así nomás para que queden registrados ya que no tengo las tablitas esas que a vos tanto te gustan...)\\	
+
+============================================\\
+Naive Bayes:
 	
-	\section{LDA?}
+Correctly Classified Instances         141               34.058  %
+Incorrectly Classified Instances       273               65.942  %
+Kappa statistic                          0.0109
+Mean absolute error                      0.4438
+Root mean squared error                  0.4728
+Relative absolute error                 99.8449 %
+Root relative squared error            100.2839 %
+Coverage of cases (0.95 level)         100      %
+Mean rel. region size (0.95 level)     100      %
+Total Number of Instances              414     
+
+=== Detailed Accuracy By Class ===
+
+                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
+                 0,246    0,283    0,304      0,246    0,272      -0,038   0,490     0,324     1
+                 0,601    0,536    0,359      0,601    0,450      0,062    0,531     0,349     2
+                 0,174    0,170    0,338      0,174    0,230      0,005    0,490     0,336     3
+Weighted Avg.    0,341    0,330    0,334      0,341    0,317      0,009    0,504     0,336     
+
+=== Confusion Matrix ===
+
+  a  b  c   <-- classified as
+ 34 75 29 |  a = 1
+ 37 83 18 |  b = 2
+ 41 73 24 |  c = 3
+
+============================================\\
 	
-	\section{NN?}
+\section{NN?}
 	
-	\section{SVM?}
+\section{SVM?}
 
 \chapter{Conclusiones}
 
