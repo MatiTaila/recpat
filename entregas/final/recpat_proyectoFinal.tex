@@ -135,14 +135,50 @@ En primer lugar fue necesario entender e interiorizarse con la base de datos, lo
 En resumen contamos con una base de datos acotada y ``limpia'' con varias características fenotípicas que se quieren correlacionar con los genotipos de cada individuo. En particular se abordará el problema como un trabajo de clasificación, tomando los genotipos como clases.
 
 \chapter{Técnicas utilizadas}
-	En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
-	
-	\section{Naive Bayes}
-	
-	\section{C 4.5}
-	
-	\section{K-nn}
-	
+La mayoría de los algoritmos de \emph{machine learning} seleccionan los atributos apropiados para realizar sus decisiones. Por ejemplo los métodos de árbol de desición eligen en cada paso la característica que mejor separa en clases. Cuantas más características tengamos, en teoría tendremos más poder de discriminación, pero en la práctica no ocurre así. Agregar información irrelevante o características distractivas, confunde a los algorimos de machine learning. Está probado que el número de instancias necesarias para entrenamiento para producir un cierto nivel de performance crece exponencialmente con la cantidad de atributos irrelevantes.\\
+
+Dado el efecto negativo de las características irrelevantes es muy común en muchos algoritmos de \emph{machine learning} que se realice una etapa de selección de características donde se eliminen las irrelevantes. La mejor manera de realizar una selección de características es manual, adquiriendo un amplio conocimiento del problema en cuestión y logrando interpretar cada una de las características. Sin embargo es posible realizar una selección con algoritmos automáticos que resultan muy útiles. Reducir la dimensionalidad de los datos puede mejorar la performance de los algoritmos, además de reducir la complejidad del problema y bajar los requerimientos de capacidad de cómputo. Por esta razón se realizará una etapa de selección automática de características previa a la clasificación, como se explicará más adelante.\\ 
+
+En una primera etapa de análisis sobre la base de datos se ataca el problema con los clasificadores \textbf{C4.5}, \textbf{Naive Bayes} y \textbf{K-NN}. \\
+
+El algoritmo \textbf{C4.5} se utiliza para generar un árbol de desición que puede ser utilizado para clasificación. Por la naturaleza de los árboles, es un algoritmo no paramétrico, por lo que resulta robusto ante \emph{outliers}.\\
+
+\textbf{Naive Bayes} es un clasificador basado en la aplicación del teorema de Bayes. No particiona el espacio de instancias e ignora de forma robusta a las características irrelevantes. Asume por diseño que todas las características son independientes entre si, y paga un precio muy alto cuando hay características redundantes.\\
+
+El algoritmo \textbf{k-NN} (k-nearest neighbors) es un algoritmo de clasificación supervizado no paramétrico que pedice la clase de las instancias basado en los \emph{k} vecinos más cercanos. Es un algoritmo muy sensible a la propia estructura de los datos. Cuando $k\rightarrow \infty$, el algoritmo asegura una tasa de error no superior al doble de la tasa de error de Bayes (mínimo alcanzable dada la distribución de los datos).\\
+
+Con esta batería de clasificadores se cubre un amplio espectro y se utilizan algunos de los algoritmos más utilizados para problemas de reconocimiento de patrones.\\
+
+Para analizar los resultados se utilizan las implementaciones provistan en el software \textbf{Weka} \cite{bib:weka}.
+
+\section{Primera etapa}
+Se utiliza el clasificador compuesto \verb AttributeSelectedClassifier  que aplica una técnica de selección de características antes de entrenar al clasificador. Se logra entonces una reducción de la dimensionalidad. La estrategia elegida para la selección de características se realiza utilizando el enfoque \verb wrapper , que evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada para estimar la precisión del esquema de aprendizaje. El clasificador utilizado para estimar esta precisión es un árbol de decisión \textbf{C 4.5}.\\
+
+En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
+
+Una vez hecha la extracción de características, y así la reducción de dimensionalidad, se estudia el desempeño de diferentes clasificadores.
+
+\subsection{Naive Bayes}
+
+
+\subsection{C 4.5}
+
+\subsection{K-nn}
+
+
+
+\section{Segunda etapa - masajeo de datos}
+
+\subsection{Naive Bayes}
+
+\subsection{C 4.5}
+
+\subsection{K-nn}
+
+
+
+
+
 	\section{PCA}
 	
 	\section{LDA?}
@@ -151,7 +187,7 @@ En resumen contamos con una base de datos acotada y ``limpia'' con varias caract
 	
 	\section{SVM?}
 
-
+\chapter{Conclusiones}
 
 
 
@@ -161,7 +197,7 @@ En resumen contamos con una base de datos acotada y ``limpia'' con varias caract
 \begin{thebibliography}{99}
 \begin{small}
 
-\bibitem{bib:eileen}Eileen Armstrong Reborati, Detección y análisis de genes asociados a la calidad de la carne en bovinos, \emph{Tesis de doctorado}, Madrid, 2011.
+\bibitem{bib:eileen}Eileen Armstrong Reborati, \emph{Detección y análisis de genes asociados a la calidad de la carne en bovinos}, Tesis de doctorado, Madrid, 2011.
 \bibitem{bib:weka}Mark Hall, Eibe Frank, Geoffrey Holmes, Bernhard Pfahringer, Peter Reutemann, Ian H. Witten (2009); The WEKA Data Mining Software: An Update; SIGKDD Explorations, Volume 11.
 \bibitem{bib:REML}Meyer, K. (2007). WOMBAT – A tool for mixed model analyses in quantitative genetics by REML, J. Zhejiang Uni.
 
