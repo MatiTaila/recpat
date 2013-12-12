@@ -65,7 +65,6 @@
 \HRule \\[1cm]
 \vspace{2cm}
 % Author and supervisor
-
 \begin{center}
 \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
 \emph{Autores:} & \hfill \emph{Tutores:}\\
@@ -266,15 +265,15 @@ Esto tiene como fin reducir los niveles de redundancia entre las característica
 \subsection{PCA}
 
 El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar la base de vectores que mejor exprese la distribución de los datos en el espacio completo. Es similar a encontrar las componentes ortogonales de un vector en un espacio, o lo que es igual, encontrar un conjunto de vectores que combinados en forma lineal representen los elementos. Estos elementos son los vectores propios de la matriz de covarianza correspondiente al espacio original. \textbf{PCA} tiene como fin encontrar un subespacio principal en el cual se maximice la varianza de los datos proyectados. Se ordenan las variables de acuerdo a la cantidad de varianza que concentran y se utilizan solamente las más significativas.
-
+\vspace{-.5cm}
 \begin{figure} [H]
 \centering
   \subfloat[Características 1-2-3]{\label{fig:pca123} 
-  		\includegraphics[width=.5\textwidth]{pics/pca123}} 
+  		\includegraphics[width=.5\textwidth]{pics/pca123.pdf}} 
   \subfloat[Características 1-4-3]{\label{fig:pca143} 
-  		\includegraphics[width=.5\textwidth]{pics/pca143}} \\
+  		\includegraphics[width=.5\textwidth]{pics/pca143.pdf}} \\
   \caption{Datos procesados con el algorítmo PCA} 
-  \label{pcas}
+  \label{fig:pcas}
 \end{figure}
 
 A simple vista resulta muy difícil reconocer algún tipo de estructura sobre los datos, con lo cual es de esperar que la clasificación no entregue mejores resultados de los ya vistos. La distribución de los datos en ambos subespacios (ver figura \ref{pcas}) resulta prácticamente randómica y es imposible identificar visualmente algún cluster por clases. (Esto es medio trucho, pero sincero...)\\
@@ -339,8 +338,8 @@ A su vez, la medida estadística $\bs\kappa$ aumentó un orden de magnitud respe
 El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases. Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
 
 \begin{figure}
-	\centering 
-	\includegraphics[width=.8\textwidth]{pics/lda2}
+	\hspace{-2.5cm}
+	\includegraphics[width=1.3\textwidth]{pics/lda_zoom.pdf}
 	\caption{Proyección de los datos aplicando LDA}
 	\label{fig:lda}
 \end{figure}
@@ -388,10 +387,17 @@ Las matrices de confusión para cada clasificador son:
  43 42 53 |  c = 3
 \end{lstlisting}
 
-%TODO estimación de densidades
+Para corroborar de otra forma que los datos son efectivamente inconcluyentes se presenta la figura \ref{fig:lda_dist}, donde se puede ver con asteriscos los patrones representados en el espacio LDA y con líneas sólidas las distribuciones estimadas por clase. La representación de los patrones se realizó utilizando un color y un nivel distinto para cada clase para ayudar a la claridad de visualización.
+\begin{figure}
+	\centering
+	\includegraphics[width=.8\textwidth]{pics/lda_dist.pdf}
+	\caption{Estimación de la distribución de los datos}
+	\label{fig:lda_dist}
+\end{figure}
+Se puede corroborar una vez más que las 3 clases son muy dificiles de separar, ya que presentan distribuciones realmente muy similares.
 
 \subsection{Diffusion Maps}
-Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map \cite{bib:diffmaps}.\\
+Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map \cite{bib:diffmap}.\\
 
 Diffusion maps es un algoritmo de \emph{machine learning} que computa una familia de conjuntos de datos en un espacio embebido, usualmente de baja dimensión, cuyas coordenadas pueden ser calculadas de los vectores y valores propios de un operador de difusión de los datos. La distancia euclídea entre puntos en el espacio embebido es la ``distancia de difusión''. A diferencia de otros métodos de reducción de dimensionalidad como PCA, este algoritmo es un método no lineal que se centra en descubrir \emph{manifold} subyacente al muestreo de los datos. Integrando la similitud local de los datos a diferentes escalas, \emph{diffusion maps} da una descripción global de los datos. Es robusto ante perturbaciones ruidosas y computacionalmente barato.\\
 
@@ -407,16 +413,28 @@ Como se puede apreciar en la figura, al igual que en los casos anteriores los pa
 
 
 \chapter{Conclusiones}
-falta\\
-- hacer andar el lda y hacer la grafiquita\\
-- student y anova\\
-- llenar la tabla de lda\\
-- conclusiones
-- agregar referencia a diffusion maps
+% decir que vamos a seguir intentando porque excede este trabajo. mencionar wombat.
 
-decir que vamos a seguir intentando porque excede este trabajo. mencionar wombat.
+Cuestionarse si un determinado gen puede tener efectos en variables fenotípicas resulta una pregunta ambiciosa incluso para un genetista, y por esa razón es que desde un principio tenemos presente la dificultad del problema al que nos enfrentamos. A diferencia de otro tipo de estudios donde uno trata de elegír descriptores que sospecha que pueden tener una realación con la clasificacón buscada, en nuestro caso buscabamos encontrar la relación entre un tipo de gen y sus marcadores moleculares respecto de un conjunto de variables fenotípicas, sin ningún tipo de conocimiento a priori. En este estudio nuestra parte consistía unicamente en realizar el análisis sobre los valores proporcionados. No tuvimos ninguna participación, como resulta obvio, en el diseño del experimento y la adquisición de datos. Es por eso que llegar a comprender el problema, las variables, los cuestionamientos e inclusive los objetivos, fue una tarea a la cuál se le debió dedicar un tiempo para nada despreciable dentro de los tiempos acotados del proyecto.\\
 
+El problema fue atacado en su mayoria por las herramientas dadas en el curso, utilizando mayoritariamente el software weka y matlab. Se experimentó con una técnica un tanto más sofisticada como lo es ``Diffusion Maps''. A su vez, dado que este trabajo excede los objetivos de este curso ya que forma parte del proyecto de investigación en el que trabajamos, se intentará utilizar otro método para la clasificación: \textbf{Restricted maximum likelihood (REML)}, mediante la implementación en el software \emph{Wombat} \cite{bib:REML}. Es un método prometedor que es muy utilizado en problemas de este tipo.\\
 
+Los resultados fueron contundentes, en la primera etapa, en la cual se trabajo con la base ya depurada pero sin ningun tipo de ajuste, los resultados no fueron los esperados. Todos los clasificadores repondieron en la misma manera comentiendo el mismo error, clasificando a practicamente la totalidad de los patrones en una misma categoría: ``AB''.  Observando la cantidad de patrones por clase, como se muestra en la figura \ref{fig:desbalance_clases}, destaca la categoría ``AB'' superando ampliamente a las restantes. Es probable que eso lleve a que los clasificadores obtengan el mejor resultado (aproximadamente 50\%) clasificando todos los patrones como ``AB''.\\
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.75\textwidth]{./pics/desbalance_clases.png}
+	\caption{}
+	\label{fig:desbalance_clases}
+\end{figure}
+
+El siguiente paso fue trabajar o ``masajear'' la base de datos con el fin de balancear las clases y normalizar los descriptores. Esto tuvo dos efectos directos, en primer lugar los tres algoritmos de clasificación disminuyeron su performance clasificando en promedio un 37\% de los patrones correctamente. Si bien el resultado es inferor al obtenido previamente, en esta ocación el algoritmo trabajó y desarrollo sus clasificadores como se ve en los resultados de la matriz de confusión.\\
+
+Una vez con la base trabajada y los calsificadores trabajando como es esperable se optó por aplicar los algorítmos básicos de extracción de características, PCA y LDA. En el caso de PCA se optó por trabjar en el subespacio de los primeros cuatro componentes cuaya varianza acumulada supera al 80\%. Este cambio se vio reflejado en un aumento promedio del 5\% en la clasificación, pero más allá de la leve mejora esto nos lleva a pensar que no existe ningun tipo de distribución asociada a las clases. En la figura \ref{fig:pcas} se puede ver como los patrones presentan una distribución casi aleatoria respecto a las clases. Al aplicar LDA se redujo el espacio a una dimensión, la cual no presenta un poder de discriminación suficientemente superior a la observada anteriormente. Los resultados obtenidos son ligeramente superiores a los obtenidos mediante PCA salvo para el clasificador k-NN.\\
+
+Finalmente los resultados demostraron que no es posible expresar, mediante los algorítmos aplicados, una correlación entre el gen estudiado y las variables fenotípicas. Naturalmente no podemos afirmar lo contrario, queda todavía un largo conjunto de herramientas estdísticas por aplicar, algunas de ellas con un enfoque mayor a las dadas en el curso hacia problemas biológicos.\\
+
+También se comprobó como, que en general, cuando uno no puede visualizar la distribución de los datos o incluso las correlaciónes entre las variables medidas de modo visual, previo a cualquier tipo de análisis. Es muy dificil que un algoritmo tenga un buen desempeño, los algoitmos vistos en el curso buscan automatizar ese tipo de análisis que uno puede realizar y hasta sospechar simplemente analizando los datos.
 
 \begin{thebibliography}{99}
 \begin{small}
@@ -424,7 +442,7 @@ decir que vamos a seguir intentando porque excede este trabajo. mencionar wombat
 \bibitem{bib:eileen}Eileen Armstrong Reborati, \emph{Detección y análisis de genes asociados a la calidad de la carne en bovinos}, Tesis de doctorado, Madrid, 2011.
 \bibitem{bib:weka}Mark Hall, Eibe Frank, Geoffrey Holmes, Bernhard Pfahringer, Peter Reutemann, Ian H. Witten (2009); The WEKA Data Mining Software: An Update; SIGKDD Explorations, Volume 11.
 \bibitem{bib:REML}Meyer, K. (2007). WOMBAT – A tool for mixed model analyses in quantitative genetics by REML, J. Zhejiang Uni.
-\bibitem{bib:diffmap}R.R.Coifman, S.Lafon, A.B.Lee, M.Maggioni, B.Nadler, F.Warner y S.W.Zucker (2005). Geometric diffusions as a tool for harmonic analysis and structure definition of data: Diffusion maps.
+\bibitem{bib:diffmap}Ronald R. Coifman y Stéphane Lafon, \emph{Applied and Computational Harmonic Analysis}, Volume 21, Issue 1, July 2006, Pages 5–30.
 
 \end{small}
 \end{thebibliography}

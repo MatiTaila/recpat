@@ -65,7 +65,6 @@
 \HRule \\[1cm]
 \vspace{2cm}
 % Author and supervisor
-
 \begin{center}
 \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
 \emph{Autores:} & \hfill \emph{Tutores:}\\
@@ -266,13 +265,13 @@ Esto tiene como fin reducir los niveles de redundancia entre las característica
 \subsection{PCA}
 
 El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar la base de vectores que mejor exprese la distribución de los datos en el espacio completo. Es similar a encontrar las componentes ortogonales de un vector en un espacio, o lo que es igual, encontrar un conjunto de vectores que combinados en forma lineal representen los elementos. Estos elementos son los vectores propios de la matriz de covarianza correspondiente al espacio original. \textbf{PCA} tiene como fin encontrar un subespacio principal en el cual se maximice la varianza de los datos proyectados. Se ordenan las variables de acuerdo a la cantidad de varianza que concentran y se utilizan solamente las más significativas.
-
+\vspace{-.5cm}
 \begin{figure} [H]
 \centering
   \subfloat[Características 1-2-3]{\label{fig:pca123} 
-  		\includegraphics[width=.5\textwidth]{pics/pca123}} 
+  		\includegraphics[width=.5\textwidth]{pics/pca123.pdf}} 
   \subfloat[Características 1-4-3]{\label{fig:pca143} 
-  		\includegraphics[width=.5\textwidth]{pics/pca143}} \\
+  		\includegraphics[width=.5\textwidth]{pics/pca143.pdf}} \\
   \caption{Datos procesados con el algorítmo PCA} 
   \label{pcas}
 \end{figure}
@@ -339,9 +338,9 @@ A su vez, la medida estadística $\bs\kappa$ aumentó un orden de magnitud respe
 El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases. Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
 
 \begin{figure}
-	\centering 
-	\includegraphics[width=.8\textwidth]{pics/lda}
-	\caption{Proyeccion de los datos aplicando LDA}
+	\hspace{-2.5cm}
+	\includegraphics[width=1.3\textwidth]{pics/lda_zoom.pdf}
+	\caption{Proyección de los datos aplicando LDA}
 	\label{fig:lda}
 \end{figure}
 
@@ -355,9 +354,9 @@ En la figura \ref{fig:lda} se muestran los resultados de aplicar LDA a los datos
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   &  &  & \cellcolor[gray]{0.9}  \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  &  & 0.011 & \cellcolor[gray]{0.9} 34.06 \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   &  &  & \cellcolor[gray]{0.9} \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.03 & 0.1558 & \cellcolor[gray]{0.9} 43.7198  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0 & 0.1667 & \cellcolor[gray]{0.9} 44.4444 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0 & 0.1196 & \cellcolor[gray]{0.9} 41.3043 \\ \hline
 	\end{tabular} 
 	\caption{Resultados etapa 2}
 	\label{tab:resultados_LDA}
@@ -365,10 +364,40 @@ En la figura \ref{fig:lda} se muestran los resultados de aplicar LDA a los datos
 
 Como era de esperarse al analizar los patrones en el espacio transformado, nuevamente no es posible realizar una buena clasificación con ninguno de los clasificadores probados.
 
-%TODO estimación de densidades
+Las matrices de confusión para cada clasificador son:
+\vspace{-10pt}
+\begin{lstlisting}
+  a  b  c   <-- classified as									C4.5
+  7 107 24 |  a = 1
+ 12 122  4 |  b = 2
+  5  81 52 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as								   Bayes
+ 10 85 43 |  a = 1
+  7 94 37 |  b = 2
+  3 55 80 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as									k-NN
+ 64 48 26 |  a = 1
+ 66 54 18 |  b = 2
+ 43 42 53 |  c = 3
+\end{lstlisting}
 
-\subsection{Diffusion Map}
-Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map [Lecumberry et. al. :P].\\
+Para corroborar de otra forma que los datos son efectivamente inconcluyentes se presenta la figura \ref{fig:lda_dist}, donde se puede ver con asteriscos los patrones representados en el espacio LDA y con líneas sólidas las distribuciones estimadas por clase. La representación de los patrones se realizó utilizando un color y un nivel distinto para cada clase para ayudar a la claridad de visualización.
+\begin{figure}
+	\centering
+	\includegraphics[width=.8\textwidth]{pics/lda_dist.pdf}
+	\caption{Estimación de la distribución de los datos}
+	\label{fig:lda_dist}
+\end{figure}
+Se puede corroborar una vez más que las 3 clases son muy dificiles de separar, ya que presentan distribuciones realmente muy similares.
+
+\subsection{Diffusion Maps}
+Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map \cite{bib:diffmap}.\\
 
 Diffusion maps es un algoritmo de \emph{machine learning} que computa una familia de conjuntos de datos en un espacio embebido, usualmente de baja dimensión, cuyas coordenadas pueden ser calculadas de los vectores y valores propios de un operador de difusión de los datos. La distancia euclídea entre puntos en el espacio embebido es la ``distancia de difusión''. A diferencia de otros métodos de reducción de dimensionalidad como PCA, este algoritmo es un método no lineal que se centra en descubrir \emph{manifold} subyacente al muestreo de los datos. Integrando la similitud local de los datos a diferentes escalas, \emph{diffusion maps} da una descripción global de los datos. Es robusto ante perturbaciones ruidosas y computacionalmente barato.\\
 
@@ -380,14 +409,35 @@ Los resultados de pasar a un espacio de 3 dimensiones (para poder visualizarlo) 
 	\label{fig:dm}
 \end{figure}
 
-
-
+Como se puede apreciar en la figura, al igual que en los casos anteriores los patrones de las diferentes clases están realmente muy entreverados, no pudiéndose diferenciar ningún cluster.
 
 
 \chapter{Conclusiones}
+% decir que vamos a seguir intentando porque excede este trabajo. mencionar wombat.
 
+Cuestionarse si un determinado gen puede tener efectos en variables fenotípicas resulta una pregunta ambiciosa incluso para un genetista, y por esa razón que desde un principio teniamos presente la dificultad del problema al que nos enfrentabamos. En nuestro caso buscabamos la encontrar la relación entre un tipo de gen y sus marcadores moleculares respecto de un conjunto de variables fenotípicas, sin ningún tipo de conocimiento a priori sobre su realación. A diferencia de otro tipos de estudios a los cuales estamos más acostumbrados y donde los descriptores son elegidos para los cuales a priori sospecha existe una realación con la clasificacón buscada.\\
 
+En este estudio nuestra parte consistía unicamente en realizar el análisis sobre los valores proporcionados. No tuvimos ninguna participación, como resulta obvio, en el diseño del experimento y la adquisición de datos. Es por eso que llegar a comprender el problema, las variables, los cuestionamientos e inclusive los objetivos, fue una tarea a la cuál se le debió dedicar un tiempo para nada despreciable dentro de los tiempos acotados del proyecto.\\
 
+El problema fue atacado en su mayoria por las herramientas dadas en el curso, utilizando mayoritariamente el software weka y matlab. Se experimentó con una técnica un tanto más sofisticada como lo es ``Diffusion Maps''.\\
+
+Los resultados fueron contundentes, en la primera etapa, en la cuál se trabajo con la base ya depurada pero sin ningun tipo de ajuste los resultados no fueron los esperados. Todos los clasificadores repondieron en la misma manera comentiendo el mismo error, clasificando a practicamente la totalidad de los patrones en una misma categoría ``B''.  Observando la cantidad de patrones por clase destaca la categoría ``B'' superando ampliamente a las restantes. Es probable que eso lleve a que los clasificadores obtengan el mejor resultado (aproximadamente 50\%) clasificando todos los patrones como ``B''.\\
+
+ACA PODEMOS MECHAR UNA IMAGEN DE LA CANTIDAD DE PATRONES POR CLASE, LA QUE ESTA EN WEKA, NO? \\
+
+El siguiente paso fue trabajar o ``masajear'' la base de datos con el fin de balancear las clases y normalizar los descriptores. Esto tuvo dos efectos directos, en primer lugar los tres algoritmos de clasificación disminuyeron su performance clasificando en promedio un 37\% de los patrones correctamente. Si bien el resultado es inferor al obtenido previamente, en esta ocación el algoritmo trabajó y desarrollo sus clasificadores como se ve en los resultados de la matriz de confusión.\\
+
+Una vez con la base trabajada y los calsificadores trabajando como es esperable se optó por aplicar los algorítmos básicos de extracción de características, PCA y LDA.\\
+
+En el caso de PCA se optó por trabjar en el subespació de los primeros cuatro componentes cuaya varianza acumulada supera al 80\%. Este cambio se vio reflejado en un aumento promedio del 5\% en la clasificación, pero más allá de la leve mejora esto nos lleva a pensar que no existe ningun tipo de distribución asociada a las clases. En la figura 3 se puede ver como los patrones presentan una distribución casi aleatoria respecto a las clases. (Aca capaz q quedó muy tropical!)\\
+
+Al aplicar LDA se redujo el espacio a una dimensión, la misma no presenta, a simple vista, un discriminalidad superior a la vista anteriormente. Los resultados obtenidos son ligeramente superior a los obtenidos mediante PCA salvo para el clasificador k-NN.\\
+
+Finalmente los resultados demostraron que no es posible expresar, mediante los algorítmos aplicados, una correlación entre el gen estudiado y las variables fenotípicas. Naturalmente no podemos afirmar lo contrario, queda todavía un largo conjunto de herramientas estdísticas por aplicar, algunas de ellas con un enfoque mayor a las dadas en el curso hacia problemas biológicos.\\
+
+Esta es medio Sui Generis\\
+
+También se comprobó como, que en general, cuando uno no puede visualizar la distribución de los datos o incluso las correlaciónes entre las variables medidas de modo visual, previo a cualquier tipo de análisis. Es muy dificil que un algoritmo tenga un buen desempeño, los algoitmos vistos en el curso busca automatizar ese tipo de análisis que uno puede realizar y hasta sospechar simplemente analizando los datos.  
 
 
 
@@ -397,6 +447,7 @@ Los resultados de pasar a un espacio de 3 dimensiones (para poder visualizarlo) 
 \bibitem{bib:eileen}Eileen Armstrong Reborati, \emph{Detección y análisis de genes asociados a la calidad de la carne en bovinos}, Tesis de doctorado, Madrid, 2011.
 \bibitem{bib:weka}Mark Hall, Eibe Frank, Geoffrey Holmes, Bernhard Pfahringer, Peter Reutemann, Ian H. Witten (2009); The WEKA Data Mining Software: An Update; SIGKDD Explorations, Volume 11.
 \bibitem{bib:REML}Meyer, K. (2007). WOMBAT – A tool for mixed model analyses in quantitative genetics by REML, J. Zhejiang Uni.
+\bibitem{bib:diffmap}Ronald R. Coifman y Stéphane Lafon, \emph{Applied and Computational Harmonic Analysis}, Volume 21, Issue 1, July 2006, Pages 5–30.
 
 \end{small}
 \end{thebibliography}

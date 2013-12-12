@@ -44,7 +44,9 @@ figure; hold on
 	plot3(Y(1,1:N),Y(2,1:N),Y(3,1:N), '*', 'color', colors{1})
 	plot3(Y(1,N+1:2*N),Y(2,N+1:2*N),Y(3,N+1:2*N), '*', 'color', colors{5})
 	plot3(Y(1,2*N+1:end),Y(2,2*N+1:end),Y(3,2*N+1:end), '*', 'color', colors{3})
-
+	grid on
+	title('\fontsize{16}Diffusion Maps')
+	legend('\fontsize{16}AA','\fontsize{16}AB','\fontsize{16}BB')
 
 %% PCA
 [pcaData, V] = recpat_pca(data');
@@ -56,17 +58,51 @@ figure;
 	plot3(pcaData(4,2*N+1:end),pcaData(5,2*N+1:end),pcaData(6,2*N+1:end),'*', 'color', colors{3})
 
 
-
 %% LDA
-[y, V] = recpat_lda(data(1:2*N,:)',labels(1:2*N)');
-figure; 
-	plot(y(1:N),ones(N,1),'*','color',colors{1})
+W = LDA(data,labels);
+W = W(:,2:end);
+ldaData = W*data';
+
+figure;
+	plot3(ldaData(1,1:N),ldaData(2,1:N),ldaData(3,1:N),'*','color',colors{1})
 	hold on
-	plot(y(N+1:2*N),ones(N,1),'*','color',colors{5})
-	alpha(0.8)
-	axis([min(y) max(y) 0.8 1.2])
+	plot3(ldaData(1,N+1:2*N),ldaData(2,N+1:2*N),ldaData(3,N+1:2*N),'*','color',colors{5})
+	plot3(ldaData(1,2*N+1:3*N),ldaData(2,2*N+1:3*N),ldaData(3,2*N+1:3*N),'*','color',colors{3})
+
+	
+[eigvector, eigvalue] = LDA2(labels, [], data);
+lda2Data = data*eigvector(:,1);
+
+[F1,XI1] = ksdensity(lda2Data(1:N));
+[F2,XI2] = ksdensity(lda2Data(N+1:2*N));
+[F3,XI3] = ksdensity(lda2Data(2*N+1:3*N));
+
+figure; 
+	plot(lda2Data(1:N),ones(N,1),'*','color',colors{1})
+	plot(lda2Data(1:N),ones(N,1),'*', 'color',colors{1})
+	hold on
+	plot(lda2Data(N+1:2*N),ones(N,1),'*','color',colors{5})
+	plot(lda2Data(2*N+1:3*N),ones(N,1),'*','color',colors{3})
+% 	axis([min(y) max(y) 0.8 1.2])
+	plot(F1,XI1,'color',color)
+	
 
 
+% [y, V] = recpat_lda(data',labels',N);
+% figure; 
+% 	plot(y(1:N),ones(N,1),'*','color',colors{1})
+% 	hold on
+% 	plot(y(N+1:2*N),ones(N,1),'*','color',colors{5})
+% 	alpha(0.8)
+% 	axis([min(y) max(y) 0.8 1.2])
+% 
+% [F1,XI1] = ksdensity(y(1:N));
+% [F2,XI2] = ksdensity(y(N+1:2*N));
+% 
+% figure;
+% plot(XI1,F1)
+% hold on
+% plot(XI2,F2,'r')
 
 
 

@@ -1,4 +1,4 @@
-close all
+% close all
 clear all
 home
 
@@ -58,23 +58,53 @@ figure;
 	plot3(pcaData(4,2*N+1:end),pcaData(5,2*N+1:end),pcaData(6,2*N+1:end),'*', 'color', colors{3})
 
 
-break
 %% LDA
-[y, V] = recpat_lda(data',labels',N);
-figure; 
-	plot(y(1:N),ones(N,1),'*','color',colors{1})
-	hold on
-	plot(y(N+1:2*N),ones(N,1),'*','color',colors{5})
-	alpha(0.8)
-	axis([min(y) max(y) 0.8 1.2])
-
-[F1,XI1] = ksdensity(y(1:N));
-[F2,XI2] = ksdensity(y(N+1:2*N));
+W = LDA(data,labels);
+W = W(:,2:end);
+ldaData = W*data';
 
 figure;
-plot(XI1,F1)
-hold on
-plot(XI2,F2,'r')
+	plot3(ldaData(1,1:N),ldaData(2,1:N),ldaData(3,1:N),'*','color',colors{1})
+	hold on
+	plot3(ldaData(1,N+1:2*N),ldaData(2,N+1:2*N),ldaData(3,N+1:2*N),'*','color',colors{5})
+	plot3(ldaData(1,2*N+1:3*N),ldaData(2,2*N+1:3*N),ldaData(3,2*N+1:3*N),'*','color',colors{3})
+
+	
+[eigvector, eigvalue] = LDA2(labels, [], data);
+lda2Data = data*eigvector(:,1);
+
+[F1,XI1] = ksdensity(lda2Data(1:N));
+[F2,XI2] = ksdensity(lda2Data(N+1:2*N));
+[F3,XI3] = ksdensity(lda2Data(2*N+1:3*N));
+
+figure; 
+	plot(lda2Data(1:N),ones(N,1),'*','color',colors{1})
+	plot(lda2Data(1:N),ones(N,1),'*', 'color',colors{1})
+	hold on
+	plot(lda2Data(N+1:2*N),ones(N,1),'*','color',colors{5})
+	plot(lda2Data(2*N+1:3*N),ones(N,1),'*','color',colors{3})
+% 	axis([min(y) max(y) 0.8 1.2])
+	plot(XI1,F1,'color',colors{1})
+	plot(XI2,F2,'color',colors{5})
+	plot(XI3,F3,'color',colors{3})
+	
+
+
+% [y, V] = recpat_lda(data',labels',N);
+% figure; 
+% 	plot(y(1:N),ones(N,1),'*','color',colors{1})
+% 	hold on
+% 	plot(y(N+1:2*N),ones(N,1),'*','color',colors{5})
+% 	alpha(0.8)
+% 	axis([min(y) max(y) 0.8 1.2])
+% 
+% [F1,XI1] = ksdensity(y(1:N));
+% [F2,XI2] = ksdensity(y(N+1:2*N));
+% 
+% figure;
+% plot(XI1,F1)
+% hold on
+% plot(XI2,F2,'r')
 
 
 

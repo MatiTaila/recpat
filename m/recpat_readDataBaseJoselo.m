@@ -4,7 +4,7 @@ home
 
 %% Load data
 colors = cows_colors();
-D	   = importdata('finalDatabaseNormalizada.csv');
+D	   = importdata('../../finalDatabaseNormalizada.csv');
 
 %% Balanceo de clases
 AA = [];
@@ -48,33 +48,37 @@ ind = randperm(N);
 
 %% PCA
 
-% [pcaData, D] = recpat_pca(data');
+[pcaData, D] = recpat_pca(data');
 
-% figure,plot(D,'r*:'),xlabel('Descriptores'),ylabel('Varianza')
-% labels = [ones(N,1);2*ones(N,1);3*ones(N,1)];
+figure,plot(D,'r*:'),xlabel('Descriptores'),ylabel('Varianza')
+labels = [ones(N,1);2*ones(N,1);3*ones(N,1)];
 
-% figure,
-% 	plot3(pcaData(1,1:N),pcaData(2,1:N),pcaData(3,1:N),'*', 'color', colors{1}),title('PCA'),xlabel('Característica 1'),ylabel('Característica 4'),zlabel('Característica 3'); 
-% 	hold on
-%     grid on
-% 	plot3(pcaData(1,N+1:2*N),pcaData(2,N+1:2*N),pcaData(3,N+1:2*N),'*', 'color', colors{5})
-% 	plot3(pcaData(1,2*N+1:end),pcaData(2,2*N+1:end),pcaData(3,2*N+1:end),'*', 'color', colors{3})
+figure,
+	plot3(pcaData(1,1:N),pcaData(2,1:N),pcaData(3,1:N),'*', 'color', colors{1}),title('PCA'),xlabel('Caracterï¿½stica 1'),ylabel('Caracterï¿½stica 4'),zlabel('Caracterï¿½stica 3'); 
+	hold on
+    grid on
+	plot3(pcaData(1,N+1:2*N),pcaData(2,N+1:2*N),pcaData(3,N+1:2*N),'*', 'color', colors{5})
+	plot3(pcaData(1,2*N+1:end),pcaData(2,2*N+1:end),pcaData(3,2*N+1:end),'*', 'color', colors{3})
 
-%     csvwrite('dataPca.csv',[pcaData' labels]);
+    csvwrite('dataPca.csv',[pcaData' labels]);
 
-% descriptores = size(data,2);
-% 
-% for p=1:descriptores-2
-% figure; 
-% plot3(pcaData(p,1:N),pcaData(p+1,1:N),pcaData(p+2,1:N),'*', 'color', colors{1}); 
-% hold on
-% plot3(pcaData(p,N+1:2*N),pcaData(p+1,N+1:2*N),pcaData(p+2,N+1:2*N),'*', 'color', colors{5})
-% plot3(pcaData(p,2*N+1:end),pcaData(p+1,2*N+1:end),pcaData(p+2,2*N+1:end),'*', 'color', colors{3})
-% hold off
-% pause
-% close all
-% end
+descriptores = size(data,2);
 
+for p=1:descriptores-2
+figure; 
+plot3(pcaData(p,1:N),pcaData(p+1,1:N),pcaData(p+2,1:N),'*', 'color', colors{1}); 
+hold on
+plot3(pcaData(p,N+1:2*N),pcaData(p+1,N+1:2*N),pcaData(p+2,N+1:2*N),'*', 'color', colors{5})
+plot3(pcaData(p,2*N+1:end),pcaData(p+1,2*N+1:end),pcaData(p+2,2*N+1:end),'*', 'color', colors{3})
+xlabel(['\fontsize{15}Caracteristica ' num2str(p)])
+ylabel(['\fontsize{15}Caracteristica ' num2str(p+1)])
+zlabel(['\fontsize{15}Caracteristica ' num2str(p+2)])
+grid on
+hold off
+pause
+close all
+end
+break
 %%
 
 labels = [ones(N,1);2*ones(N,1);3*ones(N,1)];
@@ -86,13 +90,25 @@ data = data';
 
 datos = ones(length(data),2) ;
 datos(:,1)=data; 
+datos(:,2)=labels;
 
-
-plot(datos(2*N+1:3*N,1),datos(2*N+1:3*N,2),'*', 'color', colors{3}),title('LDA'),xlabel('espacio LDA')
+plot(datos(2*N+1:3*N,1),datos(2*N+1:3*N,2),'*', 'color', colors{1}),title('LDA'),xlabel('espacio LDA')
 hold on 
 grid on
 plot(datos(N+1:2*N,1),datos(N+1:2*N,2),'*', 'color', colors{5})
-plot(datos(1:N,1),datos(1:N,2),'*', 'color', colors{1})
+plot(datos(1:N,1),datos(1:N,2),'*', 'color', colors{3})
+
+[F1,XI1] = ksdensity(data(1:N));
+[F2,XI2] = ksdensity(data(N+1:2*N));
+[F3,XI3] = ksdensity(data(2*N+1:3*N));
+
+plot(XI1,F1,'color',colors{1},'linewidth',2.3)
+plot(XI2,F2,'color',colors{5},'linewidth',2.3)
+plot(XI3,F3,'color',colors{3},'linewidth',2.3)
+
+title('\fontsize{16}LDA')
+legend('\fontsize{16}Patrones AA','\fontsize{16}Patrones AB','\fontsize{16}Patrones BB','\fontsize{16}Distribucion AA','\fontsize{16}Distribucion AB','\fontsize{16}Distribucion BB')
+
 
 csvwrite('dataLda.csv',[datos(:,1) labels]);
 
@@ -126,7 +142,7 @@ labels = [ones(N,1);2*ones(N,1);3*ones(N,1)];
 % plot3(ldaData(1:N,p),ldaData(1:N,p+1),ldaData(1:N,p+2),'*', 'color', colors{1}); 
 % hold on
 % grid on
-% plot3(ldaData(N+1:2*N,p),ldaData(N+1:2*N,p+1),ldaData(N+1:2*N,p+2),'*', 'color', colors{5}),title('LDA'),xlabel('Primera dirección'),ylabel('Segunda dirección'),zlabel('Tercera dirección'); 
+% plot3(ldaData(N+1:2*N,p),ldaData(N+1:2*N,p+1),ldaData(N+1:2*N,p+2),'*', 'color', colors{5}),title('LDA'),xlabel('Primera direcciï¿½n'),ylabel('Segunda direcciï¿½n'),zlabel('Tercera direcciï¿½n'); 
 % plot3(ldaData(2*N+1:end,p),ldaData(2*N+1:end,p+1),ldaData(2*N+1:end,p+2),'*', 'color', colors{3})
 % hold off
 % pause
