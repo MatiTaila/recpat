@@ -152,7 +152,7 @@ Con esta batería de clasificadores se cubre un amplio espectro y se utilizan al
 Para analizar los resultados se utilizan las implementaciones provistan en el software \textbf{Weka} \cite{bib:weka}.
 
 \section{Primera etapa}
-Se utiliza el clasificador compuesto \verb AttributeSelectedClassifier  que aplica una técnica de selección de características antes de entrenar al clasificador. Se logra entonces una reducción de la dimensionalidad. La estrategia elegida para la selección de características se realiza utilizando el enfoque \verb wrapper , que evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada para estimar la precisión del esquema de aprendizaje. El clasificador utilizado para estimar esta precisión es un árbol de decisión \textbf{C 4.5}.\\
+Se utiliza el clasificador compuesto AttributeSelectedClassifier  que aplica una técnica de selección de características antes de entrenar al clasificador. Se logra entonces una reducción de la dimensionalidad. La estrategia elegida para la selección de características se realiza utilizando el enfoque wrapper , que evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada para estimar la precisión del esquema de aprendizaje. El clasificador utilizado para estimar esta precisión es un árbol de decisión \textbf{C 4.5}.\\
 
 En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
 
@@ -160,21 +160,25 @@ Una vez hecha la extracción de características, y así la reducción de dimens
 \begin{table}[H]
 \centering
 	\begin{tabular}{c|c|c|c|c|c|} 
-	\cline{2-5}
+	\cline{2-6}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.84 & 0.45 & 0.331 & 1 & \cellcolor[gray]{0.9}49.83  \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.37 & 0.45 & 0.345 & 1 & \cellcolor[gray]{0.9}49.60 \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0.37 & 0.53 & 0.402 & 1 & \cellcolor[gray]{0.9}45.23 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.84 & 0.45 & 0.331 & 0 & \cellcolor[gray]{0.9}49.83  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.37 & 0.45 & 0.345 & 0.0044 & \cellcolor[gray]{0.9}49.60 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0.37 & 0.53 & 0.402 & 0.0043 & \cellcolor[gray]{0.9}45.23 \\ \hline
 	\end{tabular} 
 	\caption{Resultados etapa 1}
 	\label{tab:resultados_etapa1}
 \end{table}
-Se puede observar en la tabla anterior que se obtienen resultados muy similares para los 3 algoritmos. Para C4.5 y Bayes se obtiene un porcentaje de aciertos un poco menor al 50\%, mientras que para k-NN los resultados son un poco inferiores. Por otro lado resulta interesante analizar las matrices de confusión que resultan de estos algoritmos. Para el C4.5 se obtiene la siguiente matriz:
+Se puede observar en la tabla anterior que se obtienen resultados muy similares para los 3 algoritmos. Para C4.5 y Bayes se obtiene un porcentaje de aciertos un poco menor al 50\%, mientras que para k-NN los resultados son un poco inferiores. \\
+
+La medida de error \emph{kappa-statistic} ($\bs\kappa$), es un indicador de la performance del algoritmo que tiene en cuenta las coincidencias por azar. Se calcula como $$\bs\kappa = \frac{P_0-P_e}{1-P_e}$$donde $P_0$ es la proporción de coincidencias observadas y $P_e$ la proporción de coincidencias esperadas en las hipótesis de independencia, es decir, coincidencias por azar. Se puede ver en la tabla \ref{tab:resultados_etapa1} que se obtuvieron valores de $\bs\kappa$ realmente bajísimos, siendo este un indicador más de la mala performance alcanzada por los algoritmos.\\
+
+Por otro lado resulta interesante analizar las matrices de confusión que resultan de estos algoritmos. Para el C4.5 se obtiene la siguiente matriz:
 \begin{lstlisting}
    a   b   c   <-- classified as								C4.5
    0 309   0 |   a = AA
@@ -196,48 +200,189 @@ Por otro lado las matrices de confusión para los algoritmos \emph{Naive Bayes} 
   81 331  32 |   b = AB
   18 111   9 |   c = BB
 \end{lstlisting}
-Si bien estos dos casos no se obtuvo un resultado determinístico como en con C4.5, igualmente los resultados tienen un fuerte sesgo hacia la clasificación de los patrones como pertenecietes a la clase ``AB''.\\
+Si bien estos dos casos no se obtuvo un resultado determinístico como con C4.5, igualmente los resultados tienen un fuerte sesgo hacia la clasificación de los patrones como pertenecietes a la clase ``AB''.\\
 
-Para evitar el fenómeno de la salida determinística mencionado, el siguiente paso es atacar el problema del desbalance de clases. Para ello se realiza un sorteo aleatorio de las muestras pertenecientes a las 2 clases mayoritarias, de forma que las 3 clases tengan la misma cantidad de patrones. Los resultados se presentan en la siguiente sección.
+Para mitigar el fenómeno de la salida determinística (y el sesgo) mencionado, el siguiente paso es atacar el problema del desbalance de clases. Para ello se realiza un sorteo aleatorio de las muestras pertenecientes a las 2 clases mayoritarias, de forma que las 3 clases tengan la misma cantidad de patrones. Los resultados se presentan en la siguiente sección.
 
 \section{Segunda etapa - Clases balanceadas}
+
+Las características seleccionadas son la condición corporal al momento del parto, a los 30, 45 y 90 días post parto, la cantidad de lactancias, la edad, el intervalo entre partos, progesterona y la cantidad de leche. \\
+
+Los resultados de la segunda etapa, balanceando las clases, se muestran en la figura \ref{tab:resultados_etapa2}. 
 
 \begin{table}[H]
 \centering
 	\begin{tabular}{c|c|c|c|c|c|} 
 	\cline{2-6}
-	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}} 
-	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{\# Caract.}} 
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
-	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Mal Clasif [\%]}} \\ \hline
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}} & 0.62 & 23 & 0.166 & 0.957 & \cellcolor[gray]{0.9}4.33  \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}  & 0.28 & 23 & 0.315 & 0.839 & \cellcolor[gray]{0.9}15.88 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 12.57 & 0.54 & 0.39 & 0.080 & \cellcolor[gray]{0.9}38.65  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 11.77 & 0.50 & 0.30 & 0.044 & \cellcolor[gray]{0.9}36.23 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 11.92 & 0.63 & 0.38 & 0.069 & \cellcolor[gray]{0.9}37.92 \\ \hline
 	\end{tabular} 
-	\caption{CfsSubset con búsqueda BestFirst}
-	\label{tab:cfssubset}
+	\caption{Resultados etapa 2}
+	\label{tab:resultados_etapa2}
 \end{table}
 
+Como primer ítem a mencionar se debe destacar el descenso en el porcentaje de aciertos, de algo más del 10\%. Mientas que los resultados de la primera etapa arrojaban un porcentaje de aciertos de aproximadamente 49\%, en esta etapa se nota un descenso hasta alrededor de los 38 puntos pocentuales. Aunque a priori parece un peor resultado, en interesante analizarlo con cuidado ya que por ejemplo el índice $\bs\kappa$ aumentó un órden de magnitud, aunque sigue siendo muy malo.\\
 
+A diferencia de los resultados de la etapa anterior, para el caso del algoritmo C4.5 se obtiene un árbol no trivial con una cantidad total de 147 nodos y 74 hojas. Si bien la clasificación se encuentra por encima de una una clasificación aleatoria, son resultados realmente muy malos. \\
 
-\subsection{Naive Bayes}
+El balanceo de clases logró solucionar el problema del resultado determinístico (o el fuerte sesgo) donde se clasificaba todos los patrones (o casi todos) como pertenecientes a la clase ``AB'', y la matriz de confusión se muestra a continuación:
+\vspace{-10pt}
+\begin{lstlisting}
+  a   b   c   <-- classified as									C4.5   
+ 44  55  39 |  a = AA
+ 51  54  33 |  b = AB
+ 40  36  62 |  c = BB
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a   b   c   <-- classified as								   Bayes
+ 10 102  26 |   a = AA
+  6 107  25 |   b = AB
+ 19  86  33 |   c = BB
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a   b   c   <-- classified as									k-NN
+ 45  52  41 |  a = AA
+ 54  49  35 |  b = AB
+ 31  44  63 |  c = BB
+\end{lstlisting}
 
-\subsection{C 4.5}
+Dado el terriblemente bajo porcentaje de aciertos obtenido en esta etapa, en la siguiente etapa se intentará realizar una extracción de características con métodos más sofisticados e intentar explicar el por qué de los resultados tan malos.
 
-\subsection{K-nn}
+\section{Tercera etapa - extración de características}
 
+En la tercera etapa buscaremos realizar extracción de características con el fin de reducir la dimensionalidad y  buscar características con mayor discriminación. 
 
+Esto tiene como fin reducir los niveles de redundancia entre las características, visualizar características latentes significativas y generar para el futuro una mayor compresión en el proceso de generación de datos. 
 
+\subsection{PCA}
 
+El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar la base de vectores que mejor exprese la distribución de los datos en el espacio completo. Es similar a encontrar las componentes ortogonales de un vector en un espacio, o lo que es igual, encontrar un conjunto de vectores que combinados en forma lineal representen los elementos. Estos elementos son los vectores propios de la matriz de covarianza correspondiente al espacio original. \textbf{PCA} tiene como fin encontrar un subespacio principal en el cual se maximice la varianza de los datos proyectados. Se ordenan las variables de acuerdo a la cantidad de varianza que concentran y se utilizan solamente las más significativas.
 
-	\section{PCA}
+\begin{figure} [H]
+\centering
+  \subfloat[Características 1-2-3]{\label{fig:pca123} 
+  		\includegraphics[width=.5\textwidth]{pics/pca123}} 
+  \subfloat[Características 1-4-3]{\label{fig:pca143} 
+  		\includegraphics[width=.5\textwidth]{pics/pca143}} \\
+  \caption{Datos procesados con el algorítmo PCA} 
+  \label{pcas}
+\end{figure}
+
+A simple vista resulta muy difícil reconocer algún tipo de estructura sobre los datos, con lo cual es de esperar que la clasificación no entregue mejores resultados de los ya vistos. La distribución de los datos en ambos subespacios (ver figura \ref{pcas}) resulta prácticamente randómica y es imposible identificar visualmente algún cluster por clases. (Esto es medio trucho, pero sincero...)\\
+
+\begin{wrapfigure}{l}{0.6\textwidth}
+	\vspace{-25pt}
+	\begin{center}
+		\includegraphics[width=0.5\textwidth]{pics/varianzaPCA}
+	\end{center}
+	\vspace{-20pt}
+	\caption{Varianza vs Componentes}
+	\label{varianzaPCA}
+	\vspace{-10pt}
+\end{wrapfigure}
+
+En la figura \ref{varianzaPCA} vemos la varianza en función de los componentes, podemos apreciar como la caída es abrupta y tiene sentido trabajar en el espacio de los primeros tres componentes que acumulan la mayor cantidad de varianza.\\
+
+Los resultados de aplicar los clasificadores a los datos procesados con PCA se muestran en la tabla \ref{tab:resultados_PCA}.
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|} 
+	\cline{2-4}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\section{LDA?}
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.03 & 0.143 & \cellcolor[gray]{0.9}42.75  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.02 & 0.091 & \cellcolor[gray]{0.9}39.37 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0    & 0.149 & \cellcolor[gray]{0.9}43.24 \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 2}
+	\label{tab:resultados_PCA}
+\end{table}
+Las matrices de confusión para cada clasificador son:
+\vspace{-10pt}
+\begin{lstlisting}
+  a  b  c   <-- classified as									C4.5
+ 50 42 46 |  a = 1
+ 43 59 36 |  b = 2
+ 39 31 68 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as								   Bayes
+ 19 93 26 |  a = 1
+ 22 85 31 |  b = 2
+ 18 61 59 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as									k-NN
+ 58 45 35 |  a = 1
+ 44 59 35 |  b = 2
+ 44 32 62 |  c = 3
+\end{lstlisting}
+
+Como era de esperarse analizando la distribución de los datos, se obtuvieron resultados muy malos, aunque sensiblemente mejores que en la etapa anterior, llegando en el caso de \emph{k-NN} a un porcentaje de aciertos de un poco más del 43\%.\\
+
+A su vez, la medida estadística $\bs\kappa$ aumentó un orden de magnitud respecto a la etapa anterior, y dos órdenes respecto a la etapa 1.
+
+\subsection{LDA}
+El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases. Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
+
+\begin{figure}
+	\centering 
+	\includegraphics[width=.8\textwidth]{pics/lda}
+	\caption{Proyeccion de los datos aplicando LDA}
+	\label{fig:lda}
+\end{figure}
+
+En la figura \ref{fig:lda} se muestran los resultados de aplicar LDA a los datos. Nuevamente resulta imposible obtener algun resultado visualizando la distribución de los datos, pero de todas formas se intenta realizar una clasificación con los algoritmos C4.5, Naive Bayes y k-NN. Estos resultados se muestran en la tabla \ref{tab:resultados_LDA}
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|} 
+	\cline{2-4}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\section{NN?}
-	
-	\section{SVM?}
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   &  &  & \cellcolor[gray]{0.9}  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  &  & 0.011 & \cellcolor[gray]{0.9} 34.06 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   &  &  & \cellcolor[gray]{0.9} \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 2}
+	\label{tab:resultados_LDA}
+\end{table}
+
+Como era de esperarse al analizar los patrones en el espacio transformado, nuevamente no es posible realizar una buena clasificación con ninguno de los clasificadores probados.
+
+%TODO estimación de densidades
+
+\subsection{Diffusion Map}
+Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map [Lecumberry et. al. :P].\\
+
+Diffusion maps es un algoritmo de \emph{machine learning} que computa una familia de conjuntos de datos en un espacio embebido, usualmente de baja dimensión, cuyas coordenadas pueden ser calculadas de los vectores y valores propios de un operador de difusión de los datos. La distancia euclídea entre puntos en el espacio embebido es la ``distancia de difusión''. A diferencia de otros métodos de reducción de dimensionalidad como PCA, este algoritmo es un método no lineal que se centra en descubrir \emph{manifold} subyacente al muestreo de los datos. Integrando la similitud local de los datos a diferentes escalas, \emph{diffusion maps} da una descripción global de los datos. Es robusto ante perturbaciones ruidosas y computacionalmente barato.\\
+
+Los resultados de pasar a un espacio de 3 dimensiones (para poder visualizarlo) se muestran en la figura \ref{fig:dm}.
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.8\textwidth]{./pics/dm.pdf}
+	\caption{Diffusion Maps}
+	\label{fig:dm}
+\end{figure}
+
+
+
+
 
 \chapter{Conclusiones}
 

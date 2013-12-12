@@ -44,7 +44,9 @@ figure; hold on
 	plot3(Y(1,1:N),Y(2,1:N),Y(3,1:N), '*', 'color', colors{1})
 	plot3(Y(1,N+1:2*N),Y(2,N+1:2*N),Y(3,N+1:2*N), '*', 'color', colors{5})
 	plot3(Y(1,2*N+1:end),Y(2,2*N+1:end),Y(3,2*N+1:end), '*', 'color', colors{3})
-
+	grid on
+	title('\fontsize{16}Diffusion Maps')
+	legend('\fontsize{16}AA','\fontsize{16}AB','\fontsize{16}BB')
 
 %% PCA
 [pcaData, V] = recpat_pca(data');
@@ -56,9 +58,9 @@ figure;
 	plot3(pcaData(4,2*N+1:end),pcaData(5,2*N+1:end),pcaData(6,2*N+1:end),'*', 'color', colors{3})
 
 
-
+break
 %% LDA
-[y, V] = recpat_lda(data(1:2*N,:)',labels(1:2*N)');
+[y, V] = recpat_lda(data',labels',N);
 figure; 
 	plot(y(1:N),ones(N,1),'*','color',colors{1})
 	hold on
@@ -66,7 +68,13 @@ figure;
 	alpha(0.8)
 	axis([min(y) max(y) 0.8 1.2])
 
+[F1,XI1] = ksdensity(y(1:N));
+[F2,XI2] = ksdensity(y(N+1:2*N));
 
+figure;
+plot(XI1,F1)
+hold on
+plot(XI2,F2,'r')
 
 
 

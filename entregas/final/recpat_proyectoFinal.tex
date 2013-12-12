@@ -9,9 +9,9 @@
 \usepackage{multirow}
 \usepackage{caption}
 \usepackage[spanish,es-nodecimaldot]{babel}
-%\usepackage[dvips]{hyperref}
+\usepackage[dvips]{hyperref}
 \usepackage{amssymb}
-%\usepackage{listings}
+\usepackage{listings}
 \usepackage{epsfig}
 \usepackage{amsmath}
 \usepackage{array}
@@ -21,7 +21,7 @@
 \usepackage{cancel}
 \usepackage{fancyvrb}
 
-%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 \usepackage[Sonny]{fncychap}
 %\usepackage[Glenn]{fncychap}
@@ -206,30 +206,56 @@ Para mitigar el fenómeno de la salida determinística (y el sesgo) mencionado, 
 
 \section{Segunda etapa - Clases balanceadas}
 
+Las características seleccionadas son la condición corporal al momento del parto, a los 30, 45 y 90 días post parto, la cantidad de lactancias, la edad, el intervalo entre partos, progesterona y la cantidad de leche. \\
+
+Los resultados de la segunda etapa, balanceando las clases, se muestran en la figura \ref{tab:resultados_etapa2}. 
+
 \begin{table}[H]
 \centering
 	\begin{tabular}{c|c|c|c|c|c|} 
 	\cline{2-6}
-	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}} 
-	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{\# Caract.}} 
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
-	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Mal Clasif [\%]}} \\ \hline
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}} & 0.62 & 23 & 0.166 & 0.957 & \cellcolor[gray]{0.9}4.33  \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}  & 0.28 & 23 & 0.315 & 0.839 & \cellcolor[gray]{0.9}15.88 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 12.57 & 0.54 & 0.39 & 0.080 & \cellcolor[gray]{0.9}38.65  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 11.77 & 0.50 & 0.30 & 0.044 & \cellcolor[gray]{0.9}36.23 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 11.92 & 0.63 & 0.38 & 0.069 & \cellcolor[gray]{0.9}37.92 \\ \hline
 	\end{tabular} 
-	\caption{CfsSubset con búsqueda BestFirst}
-	\label{tab:cfssubset}
+	\caption{Resultados etapa 2}
+	\label{tab:resultados_etapa2}
 \end{table}
 
+Como primer ítem a mencionar se debe destacar el descenso en el porcentaje de aciertos, de algo más del 10\%. Mientas que los resultados de la primera etapa arrojaban un porcentaje de aciertos de aproximadamente 49\%, en esta etapa se nota un descenso hasta alrededor de los 38 puntos pocentuales. Aunque a priori parece un peor resultado, en interesante analizarlo con cuidado ya que por ejemplo el índice $\bs\kappa$ aumentó un órden de magnitud, aunque sigue siendo muy malo.\\
 
+A diferencia de los resultados de la etapa anterior, para el caso del algoritmo C4.5 se obtiene un árbol no trivial con una cantidad total de 147 nodos y 74 hojas. Si bien la clasificación se encuentra por encima de una una clasificación aleatoria, son resultados realmente muy malos. \\
 
-\subsection{Naive Bayes}
+El balanceo de clases logró solucionar el problema del resultado determinístico (o el fuerte sesgo) donde se clasificaba todos los patrones (o casi todos) como pertenecientes a la clase ``AB'', y la matriz de confusión se muestra a continuación:
+\vspace{-10pt}
+\begin{lstlisting}
+  a   b   c   <-- classified as									C4.5   
+ 44  55  39 |  a = AA
+ 51  54  33 |  b = AB
+ 40  36  62 |  c = BB
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a   b   c   <-- classified as								   Bayes
+ 10 102  26 |   a = AA
+  6 107  25 |   b = AB
+ 19  86  33 |   c = BB
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a   b   c   <-- classified as									k-NN
+ 45  52  41 |  a = AA
+ 54  49  35 |  b = AB
+ 31  44  63 |  c = BB
+\end{lstlisting}
 
-\subsection{C 4.5}
-
-\subsection{K-nn}
+Dado el terriblemente bajo porcentaje de aciertos obtenido en esta etapa, en la siguiente etapa se intentará realizar una extracción de características con métodos más sofisticados e intentar explicar el por qué de los resultados tan malos.
 
 \section{Tercera etapa - extración de características}
 
@@ -239,9 +265,7 @@ Esto tiene como fin reducir los niveles de redundancia entre las característica
 
 \subsection{PCA}
 
-El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar la base de vectores que mejor exprese la distribución de los datos en el espacio completo. Es similar a encontrar las componentes ortogonales de un vector en un espacio, o lo que es igual, encontrar un conjunto de vectores que combinados en forma lineal representen los elementos. Estos elementos son los vectores propios de la matriz de covarianza correspondiente al espacio original.\\
-
-%([O esto que es más coloquial] El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar un subespacio principal en el cual se maximice la varianza de los datos proyectados. Ordenaremos las variables de acuerdo a la cantidad de varianza que concentran quedándonos con las más significativas.)
+El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin encontrar la base de vectores que mejor exprese la distribución de los datos en el espacio completo. Es similar a encontrar las componentes ortogonales de un vector en un espacio, o lo que es igual, encontrar un conjunto de vectores que combinados en forma lineal representen los elementos. Estos elementos son los vectores propios de la matriz de covarianza correspondiente al espacio original. \textbf{PCA} tiene como fin encontrar un subespacio principal en el cual se maximice la varianza de los datos proyectados. Se ordenan las variables de acuerdo a la cantidad de varianza que concentran y se utilizan solamente las más significativas.
 
 \begin{figure} [H]
 \centering
@@ -256,7 +280,7 @@ El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin 
 A simple vista resulta muy difícil reconocer algún tipo de estructura sobre los datos, con lo cual es de esperar que la clasificación no entregue mejores resultados de los ya vistos. La distribución de los datos en ambos subespacios (ver figura \ref{pcas}) resulta prácticamente randómica y es imposible identificar visualmente algún cluster por clases. (Esto es medio trucho, pero sincero...)\\
 
 \begin{wrapfigure}{l}{0.6\textwidth}
-	\vspace{-20pt}
+	\vspace{-25pt}
 	\begin{center}
 		\includegraphics[width=0.5\textwidth]{pics/varianzaPCA}
 	\end{center}
@@ -268,172 +292,104 @@ A simple vista resulta muy difícil reconocer algún tipo de estructura sobre lo
 
 En la figura \ref{varianzaPCA} vemos la varianza en función de los componentes, podemos apreciar como la caída es abrupta y tiene sentido trabajar en el espacio de los primeros tres componentes que acumulan la mayor cantidad de varianza.\\
 
-Resultados de aplicar los clasificadores a los datos procesados con PCA: (Los escribo asi nomás para que queden registrados ya que no tengo las tablitas esas que a vos tanto te gustan...)\\
-
-============================================\\
-Naive Bayes:
-
-Time taken to build model: 0.02 seconds
-
-=== Stratified cross-validation ===
-=== Summary ===
-
-Correctly Classified Instances         163               39.372  \%
-Incorrectly Classified Instances       251               60.628  \%
-Kappa statistic                          0.0906
-Mean absolute error                      0.4084
-Root mean squared error                  0.5064
-Relative absolute error                 91.8883 \%
-Root relative squared error            107.4298 \%
-Coverage of cases (0.95 level)          92.9952 \%
-Mean rel. region size (0.95 level)      86.2319 \%
-Total Number of Instances              414     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,138    0,145    0,322      0,138    0,193      -0,010   0,540     0,367     1
-                 0,616    0,558    0,356      0,616    0,451      0,055    0,563     0,365     2
-                 0,428    0,207    0,509      0,428    0,465      0,232    0,672     0,526     3
-Weighted Avg.    0,394    0,303    0,395      0,394    0,369      0,093    0,592     0,419     
-
-=== Confusion Matrix ===
-
-  a  b  c   <-- classified as
- 19 93 26 |  a = 1
- 22 85 31 |  b = 2
- 18 61 59 |  c = 3
-============================================\\
-C 4.5:\\
-
-Number of Leaves  : 	35
-
-Size of the tree : 	69
-
-
-Time taken to build model: 0.03 seconds
-
-=== Stratified cross-validation ===
-=== Summary ===
-
-Correctly Classified Instances         177               42.7536 %
-Incorrectly Classified Instances       237               57.2464 %
-Kappa statistic                          0.1413
-Mean absolute error                      0.3913
-Root mean squared error                  0.5372
-Relative absolute error                 88.0331 %
-Root relative squared error            113.9586 %
-Coverage of cases (0.95 level)          78.5024 %
-Mean rel. region size (0.95 level)      73.9936 %
-Total Number of Instances              414     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,362    0,297    0,379      0,362    0,370      0,066    0,553     0,396     1
-                 0,428    0,264    0,447      0,428    0,437      0,165    0,601     0,425     2
-                 0,493    0,297    0,453      0,493    0,472      0,192    0,614     0,416     3
-Weighted Avg.    0,428    0,286    0,426      0,428    0,427      0,141    0,589     0,413     
-
-=== Confusion Matrix ===
-
-  a  b  c   <-- classified as
+Los resultados de aplicar los clasificadores a los datos procesados con PCA se muestran en la tabla \ref{tab:resultados_PCA}.
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|} 
+	\cline{2-4}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.03 & 0.143 & \cellcolor[gray]{0.9}42.75  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.02 & 0.091 & \cellcolor[gray]{0.9}39.37 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0    & 0.149 & \cellcolor[gray]{0.9}43.24 \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 2}
+	\label{tab:resultados_PCA}
+\end{table}
+Las matrices de confusión para cada clasificador son:
+\vspace{-10pt}
+\begin{lstlisting}
+  a  b  c   <-- classified as									C4.5
  50 42 46 |  a = 1
  43 59 36 |  b = 2
  39 31 68 |  c = 3
- ============================================\\
-k-NN:\\
-
-IB1 instance-based classifier
-using 1 inverse-distance-weighted nearest neighbour(s) for classification
-
-
-Time taken to build model: 0 seconds
-
-=== Stratified cross-validation ===
-=== Summary ===
-
-Correctly Classified Instances         179               43.2367 %
-Incorrectly Classified Instances       235               56.7633 %
-Kappa statistic                          0.1486
-Mean absolute error                      0.387 
-Root mean squared error                  0.6013
-Relative absolute error                 87.0681 %
-Root relative squared error            127.5413 %
-Coverage of cases (0.95 level)          48.0676 %
-Mean rel. region size (0.95 level)      39.694  %
-Total Number of Instances              414     
-
-=== Detailed Accuracy By Class ===
-
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,420    0,319    0,397      0,420    0,408      0,100    0,553     0,399     1
-                 0,428    0,279    0,434      0,428    0,431      0,149    0,578     0,444     2
-                 0,449    0,254    0,470      0,449    0,459      0,198    0,619     0,419     3
-Weighted Avg.    0,432    0,284    0,434      0,432    0,433      0,149    0,584     0,421     
-
-=== Confusion Matrix ===
-
-  a  b  c   <-- classified as
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as								   Bayes
+ 19 93 26 |  a = 1
+ 22 85 31 |  b = 2
+ 18 61 59 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as									k-NN
  58 45 35 |  a = 1
  44 59 35 |  b = 2
  44 32 62 |  c = 3
+\end{lstlisting}
 
-  ============================================\\
- 	
+Como era de esperarse analizando la distribución de los datos, se obtuvieron resultados muy malos, aunque sensiblemente mejores que en la etapa anterior, llegando en el caso de \emph{k-NN} a un porcentaje de aciertos de un poco más del 43\%.\\
+
+A su vez, la medida estadística $\bs\kappa$ aumentó un orden de magnitud respecto a la etapa anterior, y dos órdenes respecto a la etapa 1.
+
 \subsection{LDA}
+El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases. Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
 
-El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases.\\
-Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
-
-\begin{figure}[H]
+\begin{figure}
 	\centering 
 	\includegraphics[width=.8\textwidth]{pics/lda}
 	\caption{Proyeccion de los datos aplicando LDA}
 	\label{fig:lda}
 \end{figure}
 
-Nuevamente resulta imposible obtener algun resultado visualizando la distribución de los datos, de todas formas probaremos nuestros clasificadores sobre la base proyectada.\\ 
+En la figura \ref{fig:lda} se muestran los resultados de aplicar LDA a los datos. Nuevamente resulta imposible obtener algun resultado visualizando la distribución de los datos, pero de todas formas se intenta realizar una clasificación con los algoritmos C4.5, Naive Bayes y k-NN. Estos resultados se muestran en la tabla \ref{tab:resultados_LDA}
 
-Resultados de aplicar los clasificadores a los datos procesados con LDA: (Los escribo así nomás para que queden registrados ya que no tengo las tablitas esas que a vos tanto te gustan...)\\	
-
-============================================\\
-Naive Bayes:
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|} 
+	\cline{2-4}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-Correctly Classified Instances         141               34.058  %
-Incorrectly Classified Instances       273               65.942  %
-Kappa statistic                          0.0109
-Mean absolute error                      0.4438
-Root mean squared error                  0.4728
-Relative absolute error                 99.8449 %
-Root relative squared error            100.2839 %
-Coverage of cases (0.95 level)         100      %
-Mean rel. region size (0.95 level)     100      %
-Total Number of Instances              414     
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   &  &  & \cellcolor[gray]{0.9}  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  &  & 0.011 & \cellcolor[gray]{0.9} 34.06 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   &  &  & \cellcolor[gray]{0.9} \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 2}
+	\label{tab:resultados_LDA}
+\end{table}
 
-=== Detailed Accuracy By Class ===
+Como era de esperarse al analizar los patrones en el espacio transformado, nuevamente no es posible realizar una buena clasificación con ninguno de los clasificadores probados.
 
-                 TP Rate  FP Rate  Precision  Recall   F-Measure  MCC      ROC Area  PRC Area  Class
-                 0,246    0,283    0,304      0,246    0,272      -0,038   0,490     0,324     1
-                 0,601    0,536    0,359      0,601    0,450      0,062    0,531     0,349     2
-                 0,174    0,170    0,338      0,174    0,230      0,005    0,490     0,336     3
-Weighted Avg.    0,341    0,330    0,334      0,341    0,317      0,009    0,504     0,336     
+%TODO estimación de densidades
 
-=== Confusion Matrix ===
+\subsection{Diffusion Maps}
+Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map [agregar referencia].\\
 
-  a  b  c   <-- classified as
- 34 75 29 |  a = 1
- 37 83 18 |  b = 2
- 41 73 24 |  c = 3
+Diffusion maps es un algoritmo de \emph{machine learning} que computa una familia de conjuntos de datos en un espacio embebido, usualmente de baja dimensión, cuyas coordenadas pueden ser calculadas de los vectores y valores propios de un operador de difusión de los datos. La distancia euclídea entre puntos en el espacio embebido es la ``distancia de difusión''. A diferencia de otros métodos de reducción de dimensionalidad como PCA, este algoritmo es un método no lineal que se centra en descubrir \emph{manifold} subyacente al muestreo de los datos. Integrando la similitud local de los datos a diferentes escalas, \emph{diffusion maps} da una descripción global de los datos. Es robusto ante perturbaciones ruidosas y computacionalmente barato.\\
 
-============================================\\
-	
-\section{NN?}
-	
-\section{SVM?}
+Los resultados de pasar a un espacio de 3 dimensiones (para poder visualizarlo) se muestran en la figura \ref{fig:dm}.
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.8\textwidth]{./pics/dm.pdf}
+	\caption{Diffusion Maps}
+	\label{fig:dm}
+\end{figure}
+
+Como se puede apreciar en la figura, al igual que en los casos anteriores los patrones de las diferentes clases están realmente muy entreverados, no pudiéndose diferenciar ningún cluster.
+
 
 \chapter{Conclusiones}
-
+falta\\
+- hacer andar el lda y hacer la grafiquita\\
+- student y anova\\
+- llenar la tabla de lda\\
+- conclusiones
+- agregar referencia a diffusion maps
 
 
 
