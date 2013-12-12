@@ -47,7 +47,6 @@ figure; hold on
 
 
 %% PCA
-
 [pcaData, V] = recpat_pca(data');
 
 figure; 
@@ -58,8 +57,14 @@ figure;
 
 
 
-
-
+%% LDA
+[y, V] = recpat_lda(data(1:2*N,:)',labels(1:2*N)');
+figure; 
+	plot(y(1:N),ones(N,1),'*','color',colors{1})
+	hold on
+	plot(y(N+1:2*N),ones(N,1),'*','color',colors{5})
+	alpha(0.8)
+	axis([min(y) max(y) 0.8 1.2])
 
 
 

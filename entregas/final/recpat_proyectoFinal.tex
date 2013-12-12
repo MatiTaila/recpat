@@ -69,7 +69,7 @@
 \begin{center}
 \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
 \emph{Autores:} & \hfill \emph{Tutores:}\\
-Josué Luiz \textsc{Ñuñez} &  \hfill Federico \textsc{Lecumberry}\\
+José Luis \textsc{Nunes} &  \hfill Federico \textsc{Lecumberry}\\
 Mat\'ias \textsc{Tailani\'an} & \hfill Ignacio \textsc{Ramirez}
 \end{tabular}
 \end{center}
@@ -156,18 +156,74 @@ Se utiliza el clasificador compuesto \verb AttributeSelectedClassifier  que apli
 
 En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
 
-Una vez hecha la extracción de características, y así la reducción de dimensionalidad, se estudia el desempeño de diferentes clasificadores.
+Una vez hecha la extracción de características, y así la reducción de dimensionalidad, se estudia el desempeño de diferentes clasificadores. En la tabla \ref{tab:resultados_etapa1} se muestran los resultados para los algoritmos C4.5, Naive Bayes y k-NN.
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|c|c|} 
+	\cline{2-6}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.84 & 0.45 & 0.331 & 0 & \cellcolor[gray]{0.9}49.83  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.37 & 0.45 & 0.345 & 0.0044 & \cellcolor[gray]{0.9}49.60 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0.37 & 0.53 & 0.402 & 0.0043 & \cellcolor[gray]{0.9}45.23 \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 1}
+	\label{tab:resultados_etapa1}
+\end{table}
+Se puede observar en la tabla anterior que se obtienen resultados muy similares para los 3 algoritmos. Para C4.5 y Bayes se obtiene un porcentaje de aciertos un poco menor al 50\%, mientras que para k-NN los resultados son un poco inferiores. \\
 
-\subsection{Naive Bayes}
+La medida de error \emph{kappa-statistic} ($\bs\kappa$), es un indicador de la performance del algoritmo que tiene en cuenta las coincidencias por azar. Se calcula como $$\bs\kappa = \frac{P_0-P_e}{1-P_e}$$donde $P_0$ es la proporción de coincidencias observadas y $P_e$ la proporción de coincidencias esperadas en las hipótesis de independencia, es decir, coincidencias por azar. Se puede ver en la tabla \ref{tab:resultados_etapa1} que se obtuvieron valores de $\bs\kappa$ realmente bajísimos, siendo este un indicador más de la mala performance alcanzada por los algoritmos.\\
+
+Por otro lado resulta interesante analizar las matrices de confusión que resultan de estos algoritmos. Para el C4.5 se obtiene la siguiente matriz:
+\begin{lstlisting}
+   a   b   c   <-- classified as								C4.5
+   0 309   0 |   a = AA
+   0 444   0 |   b = AB
+   0 138   0 |   c = BB
+\end{lstlisting}
+Claramente el resultado obtenido no es el esperado. En este caso clasifica todos los patrones como pertenecientes a la clase ``AB'', y como esta clase representa casi el 50\% de todas las muestras, el porcentaje de aciertos coincide. Este es un resultado determinístico, que más allá del porcentaje de aciertos, significa que el clasificador no funcionó adecuadamente. A su vez, analizando el árbol de decisión se puede ver que tiene una sola hoja.\\
+
+Por otro lado las matrices de confusión para los algoritmos \emph{Naive Bayes} y \emph{k-NN} son las siguientes:
+\begin{lstlisting}
+   a   b   c   <-- classified as							   Bayes
+   6 300   3 |   a = AA
+   8 435   1 |   b = AB
+   1 136   1 |   c = BB
+\end{lstlisting}
+\begin{lstlisting}
+   a   b   c   <-- classified as								k-NN
+  63 233  13 |   a = AA
+  81 331  32 |   b = AB
+  18 111   9 |   c = BB
+\end{lstlisting}
+Si bien estos dos casos no se obtuvo un resultado determinístico como con C4.5, igualmente los resultados tienen un fuerte sesgo hacia la clasificación de los patrones como pertenecietes a la clase ``AB''.\\
+
+Para mitigar el fenómeno de la salida determinística (y el sesgo) mencionado, el siguiente paso es atacar el problema del desbalance de clases. Para ello se realiza un sorteo aleatorio de las muestras pertenecientes a las 2 clases mayoritarias, de forma que las 3 clases tengan la misma cantidad de patrones. Los resultados se presentan en la siguiente sección.
+
+\section{Segunda etapa - Clases balanceadas}
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|c|c|} 
+	\cline{2-6}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}} 
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{\# Caract.}} 
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Mal Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}} & 0.62 & 23 & 0.166 & 0.957 & \cellcolor[gray]{0.9}4.33  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}  & 0.28 & 23 & 0.315 & 0.839 & \cellcolor[gray]{0.9}15.88 \\ \hline
+	\end{tabular} 
+	\caption{CfsSubset con búsqueda BestFirst}
+	\label{tab:cfssubset}
+\end{table}
 
 
-\subsection{C 4.5}
-
-\subsection{K-nn}
-
-
-
-\section{Segunda etapa - masajeo de datos}
 
 \subsection{Naive Bayes}
 

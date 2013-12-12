@@ -69,7 +69,7 @@
 \begin{center}
 \begin{tabular}{p{.5\textwidth}p{.5\textwidth}}
 \emph{Autores:} & \hfill \emph{Tutores:}\\
-Josué Luiz \textsc{Ñuñez} &  \hfill Federico \textsc{Lecumberry}\\
+José Luis \textsc{Nunes} &  \hfill Federico \textsc{Lecumberry}\\
 Mat\'ias \textsc{Tailani\'an} & \hfill Ignacio \textsc{Ramirez}
 \end{tabular}
 \end{center}
@@ -141,31 +141,85 @@ Dado el efecto negativo de las características irrelevantes es muy común en mu
 
 En una primera etapa de análisis sobre la base de datos se ataca el problema con los clasificadores \textbf{C4.5}, \textbf{Naive Bayes} y \textbf{K-NN}. \\
 
-El algoritmo \textbf{C4.5} se utiliza para generar un árbol de desición que puede ser utilizado para clasificación.\\
+El algoritmo \textbf{C4.5} se utiliza para generar un árbol de desición que puede ser utilizado para clasificación. Por la naturaleza de los árboles, es un algoritmo no paramétrico, por lo que resulta robusto ante \emph{outliers}.\\
 
-El algoritmo \textbf{Naive Bayes} no particiona el espacio de instancias e ignora de forma robusta a las características irrelevantes. Asume por diseño que todas las características son independientes entre si, y paga un precio muy alto cuando hay características redundantes.\\
+\textbf{Naive Bayes} es un clasificador basado en la aplicación del teorema de Bayes. No particiona el espacio de instancias e ignora de forma robusta a las características irrelevantes. Asume por diseño que todas las características son independientes entre si, y paga un precio muy alto cuando hay características redundantes.\\
 
 El algoritmo \textbf{k-NN} (k-nearest neighbors) es un algoritmo de clasificación supervizado no paramétrico que pedice la clase de las instancias basado en los \emph{k} vecinos más cercanos. Es un algoritmo muy sensible a la propia estructura de los datos. Cuando $k\rightarrow \infty$, el algoritmo asegura una tasa de error no superior al doble de la tasa de error de Bayes (mínimo alcanzable dada la distribución de los datos).\\
 
-Con esta batería de clasificadores se cubre un amplio espectro y se utilizan algunos de los algoritmos más utilizados para problemas de reconocimiento de patrones.
+Con esta batería de clasificadores se cubre un amplio espectro y se utilizan algunos de los algoritmos más utilizados para problemas de reconocimiento de patrones.\\
+
+Para analizar los resultados se utilizan las implementaciones provistan en el software \textbf{Weka} \cite{bib:weka}.
 
 \section{Primera etapa}
 Se utiliza el clasificador compuesto \verb AttributeSelectedClassifier  que aplica una técnica de selección de características antes de entrenar al clasificador. Se logra entonces una reducción de la dimensionalidad. La estrategia elegida para la selección de características se realiza utilizando el enfoque \verb wrapper , que evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada para estimar la precisión del esquema de aprendizaje. El clasificador utilizado para estimar esta precisión es un árbol de decisión \textbf{C 4.5}.\\
 
 En todos los casos se utilizó validación cruzada con 10 subconjuntos.\\
 
-Una vez hecha la extracción de características, y así la reducción de dimensionalidad, se estudia el desempeño de diferentes clasificadores.
+Una vez hecha la extracción de características, y así la reducción de dimensionalidad, se estudia el desempeño de diferentes clasificadores. En la tabla \ref{tab:resultados_etapa1} se muestran los resultados para los algoritmos C4.5, Naive Bayes y k-NN.
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|c|c|} 
+	\cline{2-5}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.84 & 0.45 & 0.331 & 1 & \cellcolor[gray]{0.9}49.83  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.37 & 0.45 & 0.345 & 1 & \cellcolor[gray]{0.9}49.60 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0.37 & 0.53 & 0.402 & 1 & \cellcolor[gray]{0.9}45.23 \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 1}
+	\label{tab:resultados_etapa1}
+\end{table}
+Se puede observar en la tabla anterior que se obtienen resultados muy similares para los 3 algoritmos. Para C4.5 y Bayes se obtiene un porcentaje de aciertos un poco menor al 50\%, mientras que para k-NN los resultados son un poco inferiores. Por otro lado resulta interesante analizar las matrices de confusión que resultan de estos algoritmos. Para el C4.5 se obtiene la siguiente matriz:
+\begin{lstlisting}
+   a   b   c   <-- classified as								C4.5
+   0 309   0 |   a = AA
+   0 444   0 |   b = AB
+   0 138   0 |   c = BB
+\end{lstlisting}
+Claramente el resultado obtenido no es el esperado. En este caso clasifica todos los patrones como pertenecientes a la clase ``AB'', y como esta clase representa casi el 50\% de todas las muestras, el porcentaje de aciertos coincide. Este es un resultado determinístico, que más allá del porcentaje de aciertos, significa que el clasificador no funcionó adecuadamente. A su vez, analizando el árbol de decisión se puede ver que tiene una sola hoja.\\
 
-\subsection{Naive Bayes}
+Por otro lado las matrices de confusión para los algoritmos \emph{Naive Bayes} y \emph{k-NN} son las siguientes:
+\begin{lstlisting}
+   a   b   c   <-- classified as							   Bayes
+   6 300   3 |   a = AA
+   8 435   1 |   b = AB
+   1 136   1 |   c = BB
+\end{lstlisting}
+\begin{lstlisting}
+   a   b   c   <-- classified as								k-NN
+  63 233  13 |   a = AA
+  81 331  32 |   b = AB
+  18 111   9 |   c = BB
+\end{lstlisting}
+Si bien estos dos casos no se obtuvo un resultado determinístico como en con C4.5, igualmente los resultados tienen un fuerte sesgo hacia la clasificación de los patrones como pertenecietes a la clase ``AB''.\\
+
+Para evitar el fenómeno de la salida determinística mencionado, el siguiente paso es atacar el problema del desbalance de clases. Para ello se realiza un sorteo aleatorio de las muestras pertenecientes a las 2 clases mayoritarias, de forma que las 3 clases tengan la misma cantidad de patrones. Los resultados se presentan en la siguiente sección.
+
+\section{Segunda etapa - Clases balanceadas}
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|c|c|} 
+	\cline{2-6}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}} 
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{\# Caract.}} 
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Mal Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}} & 0.62 & 23 & 0.166 & 0.957 & \cellcolor[gray]{0.9}4.33  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}  & 0.28 & 23 & 0.315 & 0.839 & \cellcolor[gray]{0.9}15.88 \\ \hline
+	\end{tabular} 
+	\caption{CfsSubset con búsqueda BestFirst}
+	\label{tab:cfssubset}
+\end{table}
 
 
-\subsection{C 4.5}
-
-\subsection{K-nn}
-
-
-
-\section{Segunda etapa - masajeo de datos}
 
 \subsection{Naive Bayes}
 
