@@ -9,7 +9,7 @@
 \usepackage{multirow}
 \usepackage{caption}
 \usepackage[spanish,es-nodecimaldot]{babel}
-\usepackage[dvips]{hyperref}
+%\usepackage[dvips]{hyperref}
 \usepackage{amssymb}
 \usepackage{listings}
 \usepackage{epsfig}
@@ -21,7 +21,7 @@
 \usepackage{cancel}
 \usepackage{fancyvrb}
 
-\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 \usepackage[Sonny]{fncychap}
 %\usepackage[Glenn]{fncychap}
@@ -340,7 +340,7 @@ El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccio
 
 \begin{figure}
 	\centering 
-	\includegraphics[width=.8\textwidth]{pics/lda}
+	\includegraphics[width=.8\textwidth]{pics/lda2}
 	\caption{Proyeccion de los datos aplicando LDA}
 	\label{fig:lda}
 \end{figure}
@@ -355,9 +355,9 @@ En la figura \ref{fig:lda} se muestran los resultados de aplicar LDA a los datos
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
 	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
 	
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   &  &  & \cellcolor[gray]{0.9}  \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  &  & 0.011 & \cellcolor[gray]{0.9} 34.06 \\ \hline
-	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   &  &  & \cellcolor[gray]{0.9} \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.03 & 0.1558 & \cellcolor[gray]{0.9} 43.7198  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0 & 0.1667 & \cellcolor[gray]{0.9} 44.4444 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0 & 0.1196 & \cellcolor[gray]{0.9} 41.3043 \\ \hline
 	\end{tabular} 
 	\caption{Resultados etapa 2}
 	\label{tab:resultados_LDA}
@@ -365,10 +365,33 @@ En la figura \ref{fig:lda} se muestran los resultados de aplicar LDA a los datos
 
 Como era de esperarse al analizar los patrones en el espacio transformado, nuevamente no es posible realizar una buena clasificación con ninguno de los clasificadores probados.
 
+Las matrices de confusión para cada clasificador son:
+\vspace{-10pt}
+\begin{lstlisting}
+  a  b  c   <-- classified as									C4.5
+  7 107 24 |  a = 1
+ 12 122  4 |  b = 2
+  5  81 52 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as								   Bayes
+ 10 85 43 |  a = 1
+  7 94 37 |  b = 2
+  3 55 80 |  c = 3
+\end{lstlisting}
+\vspace{-1cm}
+\begin{lstlisting}
+  a  b  c   <-- classified as									k-NN
+ 64 48 26 |  a = 1
+ 66 54 18 |  b = 2
+ 43 42 53 |  c = 3
+\end{lstlisting}
+
 %TODO estimación de densidades
 
 \subsection{Diffusion Maps}
-Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map [agregar referencia].\\
+Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map \cite{bib:diffmaps}.\\
 
 Diffusion maps es un algoritmo de \emph{machine learning} que computa una familia de conjuntos de datos en un espacio embebido, usualmente de baja dimensión, cuyas coordenadas pueden ser calculadas de los vectores y valores propios de un operador de difusión de los datos. La distancia euclídea entre puntos en el espacio embebido es la ``distancia de difusión''. A diferencia de otros métodos de reducción de dimensionalidad como PCA, este algoritmo es un método no lineal que se centra en descubrir \emph{manifold} subyacente al muestreo de los datos. Integrando la similitud local de los datos a diferentes escalas, \emph{diffusion maps} da una descripción global de los datos. Es robusto ante perturbaciones ruidosas y computacionalmente barato.\\
 
@@ -401,6 +424,7 @@ falta\\
 \bibitem{bib:eileen}Eileen Armstrong Reborati, \emph{Detección y análisis de genes asociados a la calidad de la carne en bovinos}, Tesis de doctorado, Madrid, 2011.
 \bibitem{bib:weka}Mark Hall, Eibe Frank, Geoffrey Holmes, Bernhard Pfahringer, Peter Reutemann, Ian H. Witten (2009); The WEKA Data Mining Software: An Update; SIGKDD Explorations, Volume 11.
 \bibitem{bib:REML}Meyer, K. (2007). WOMBAT – A tool for mixed model analyses in quantitative genetics by REML, J. Zhejiang Uni.
+\bibitem{bib:diffmap}R.R.Coifman, S.Lafon, A.B.Lee, M.Maggioni, B.Nadler, F.Warner y S.W.Zucker (2005). Geometric diffusions as a tool for harmonic analysis and structure definition of data: Diffusion maps.
 
 \end{small}
 \end{thebibliography}
