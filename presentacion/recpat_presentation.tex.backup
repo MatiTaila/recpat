@@ -1,0 +1,194 @@
+\documentclass[9pt,table]{beamer}
+
+\usepackage[latin1]{inputenc}
+%\usepackage[spanish]{babel}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{psfrag}
+\usepackage{tabularx}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{multirow}
+
+%% beamer options
+\mode<presentation>{
+% \usetheme{JuanLesPins}
+\usetheme{Berlin}
+\definecolor{verdecito}{rgb}{0.52,0.73,0.25}
+\definecolor{verdecito2}{rgb}{0.35,0.55,0.15}
+
+\definecolor{v1}{rgb}{0.0392,    0.5882,    0.3255}
+\definecolor{v2}{rgb}{0.4314,    0.5882,    0.4314}
+\definecolor{v3}{rgb}{0.3373,    0.5765,    0.5137}
+
+% \useoutertheme{split}
+% \usecolortheme{seahorse}
+% \usecolortheme[named=verdecito]{structure}
+\usefonttheme[onlymath]{serif}
+% \setbeamercolor{alerted text}{fg=verdecito2}
+
+\usecolortheme[named=v3]{structure}
+\setbeamercolor{alerted text}{fg=v3}
+
+\setbeamertemplate{footline}{}
+
+\setbeamertemplate{headline}
+{%
+  \begin{beamercolorbox}{section in head/foot}
+  \insertsectionnavigationhorizontal{\textwidth}{}{}
+  \end{beamercolorbox}%
+}
+
+% \tikz\draw[draw=none,top color=black,bottom color=v2] (0,0) rectangle (\paperwidth,0.2);
+% \tikz\draw[draw=none,top color=black,bottom color=v2!60] (0,0) rectangle (\paperwidth,0.5);
+
+}
+%\logo{\includegraphics[width=5cm]{jafi.eps}}
+
+\setbeamercovered{transparent}
+
+\author{José Luis Nunes\\Matías Tailanián}
+\institute[U. de la República, Montevideo]{Instituto de Ingeniería Eléctrica \\ Universidad de la República, Montevideo, Uruguay}
+
+\title[Introducción al reconocimiento de patrones 2013]{Introducción al reconocimiento de patrones 2013}
+\date[]{}
+
+%% Table of contents en cada Section
+\AtBeginSection[]
+{
+  \begin{frame}<beamer>
+    \frametitle{Contents}
+    \tableofcontents[currentsection]
+  \end{frame}
+}
+
+%%otros comandos
+\newcommand{\prob}[1]{\mathbf{P}\left(#1\right)}
+\newtheorem{teorema}{Teorema}
+\newtheorem{idea}{Idea}
+
+\newcommand{\bcol}{\begin{columns}[T]}
+\newcommand{\ecol}{\end{columns}}
+\newcommand{\col}[1][0.5]{\column{#1\textwidth}}
+
+\newcommand{\bs}{\boldsymbol}
+
+\usepackage{enumitem}
+\setitemize[1]{label=\tiny$\blacksquare$}
+\setitemize[2]{label=\tiny$\bullet$}
+\setitemize[3]{label=\tiny$\bullet$}
+
+% \newenvironment{itemize*}%
+%   {\begin{itemize}%
+%     \setlength{\topsep}{0pt}%
+%     \setlength{\itemsep}{0pt}%
+%     \setlength{\parskip}{0pt}}%
+%   {\end{itemize}
+% }
+
+\begin{document}
+
+\frame[plain]{\titlepage}
+
+\begin{frame}<beamer>
+   \frametitle{Contents}
+    \tableofcontents
+\end{frame}
+
+\section{Introduction}
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{ASDF}
+
+
+\end{frame}
+
+
+\section{Base de datos}
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Base de datos}
+Seguimiento realizado durante 9 meses sobre 891 vacas de 7 tambos diferentes.\\[.3cm]
+\pause
+\bcol
+\col
+\textcolor{v2}{\textbf{Características Fenotípicas}}
+\begin{itemize}
+	\item Edad.
+	\item Condición corporal.
+	\item Cantidad de partos.
+	\item Anestro.
+	\item Intervalo entre partos.
+	\item Secado.
+	\item Servicios.
+	\item Concentración de progesterona.
+	\item Cantidad de grasa en la leche.
+	\item Cantidad de leche.
+\end{itemize}
+\pause
+\col
+\textcolor{v2}{\textbf{Características Genotípicas}}
+\begin{figure}[H]
+	\centering 
+	\only<3-4>{\includegraphics[width=.8\columnwidth]{./pics/genotipos.png}
+	\caption{Determinación del genotipo}}
+	\label{fig:genotipo}
+\end{figure}
+\only<3-4>{Clasificación en 3 clases: ``AA'', ``AB'' y ``BB''.}
+\ecol
+\vspace{.2cm}
+\pause
+\begin{block}{Resumen}
+base de datos acotada y ``limpia'' con varias características fenotípicas que se quieren correlacionar con los genotipos de cada individuo.
+\end{block}
+\end{frame}
+
+\section{Técnicas utilizadas}
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 1}
+Se abordará el problema como un trabajo de clasificación, tomando los genotipos como clases.
+\begin{itemize}
+	\item Selección de características: método \verb wrapper . Evalúa el set de atributos utilizando un esquema de aprendizaje y utiliza validación cruzada.
+	\item Calsificadores
+	\begin{itemize}
+		\item Árbol de decisión C4.5
+		\item Naive Bayes
+		\item k-NN
+	\end{itemize}
+\end{itemize}
+
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|c|c|} 
+	\cline{2-6}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.84 & 0.45 & 0.331 & 0 & \cellcolor[gray]{0.9}49.83  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.37 & 0.45 & 0.345 & 0.0044 & \cellcolor[gray]{0.9}49.60 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0.37 & 0.53 & 0.402 & 0.0043 & \cellcolor[gray]{0.9}45.23 \\ \hline
+	\end{tabular} 
+	\caption{Resultados etapa 1}
+	\label{tab:resultados_etapa1}
+\end{table}
+
+\end{frame}
+
+
+
+
+\end{document}
+
+
