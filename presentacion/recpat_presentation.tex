@@ -16,7 +16,7 @@
 \usepackage{wrapfig}
 
 \usepackage{fancyvrb}
-\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
+%\usepackage[framed,numbered,autolinebreaks,useliterate]{mcode}
 
 %% beamer options
 \mode<presentation>{
@@ -210,6 +210,9 @@ Se abordará el problema como un trabajo de clasificación, tomando los genotipos 
 \end{frame}
 
 
+
+
+
 Se puede observar en la tabla anterior que se obtienen resultados muy similares para los 3 algoritmos. Para C4.5 y Bayes se obtiene un porcentaje de aciertos un poco menor al 50\%, mientras que para k-NN los resultados son un poco inferiores. \\
 
 La medida de error \emph{kappa-statistic} ($\bs\kappa$), es un indicador de la performance del algoritmo que tiene en cuenta las coincidencias por azar. Se calcula como $$\bs\kappa = \frac{P_0-P_e}{1-P_e}$$donde $P_0$ es la proporción de coincidencias observadas y $P_e$ la proporción de coincidencias esperadas en las hipótesis de independencia, es decir, coincidencias por azar. Se puede ver en la tabla \ref{tab:resultados_etapa1} que se obtuvieron valores de $\bs\kappa$ realmente bajísimos, siendo este un indicador más de la mala performance alcanzada por los algoritmos.\\
@@ -235,6 +238,69 @@ Si bien estos dos casos no se obtuvo un resultado determinístico como con C4.5, 
 Para mitigar el fenómeno de la salida determinística (y el sesgo) mencionado, el siguiente paso es atacar el problema del desbalance de clases. Para ello se realiza un sorteo aleatorio de las muestras pertenecientes a las 2 clases mayoritarias, de forma que las 3 clases tengan la misma cantidad de patrones. Los resultados se presentan en la siguiente sección.
 
 \section{Segunda etapa - Clases balanceadas}
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 2}
+Dados los insatisfactorios resultados se decidió:\\
+
+\begin{itemize}
+\item Balancear las clases. Originalmente:
+\begin{itemize}
+\item AA = 309
+\item AB = 444
+\item BB = 338
+\end{itemize}
+\item Normalizar los descriptores.
+\end{itemize}
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.6\textwidth]{./pics/desbalance_clases.png}
+ 	\caption{Desbalance entre clases }
+\end{figure}
+
+\end{frame}
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 2}
+
+\textcolor{v2}{\textbf{Resultados:}}
+\vspace{-5pt}
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|c|c|} 
+	\cline{2-6}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\mathbf{\sqrt{MSE}}$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{F-Measure}}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 12.57 & 0.54 & 0.39 & 0.080 & \cellcolor[gray]{0.9}38.65  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 11.77 & 0.50 & 0.30 & 0.044 & \cellcolor[gray]{0.9}36.23 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 11.92 & 0.63 & 0.38 & 0.069 & \cellcolor[gray]{0.9}37.92 \\ \hline
+	\end{tabular} 
+% 	\caption{Resultados etapa 2}
+	\label{tab:resultados_etapa2}
+\end{table}
+
+Los resultados decayeron pero los algoritmos de clasificación respondieron acordemente a lo esperado.
+
+%\begin{verbatim}
+%  a   b   c   <-- classified as									C4.5   
+% 44  55  39 |  a = AA
+% 51  54  33 |  b = AB
+% 40  36  62 |  c = BB
+%\end{verbatim}
+
+
+\end{frame}
+
+
 
 Las características seleccionadas son la condición corporal al momento del parto, a los 30, 45 y 90 días post parto, la cantidad de lactancias, la edad, el intervalo entre partos, progesterona y la cantidad de leche. \\
 
@@ -288,6 +354,29 @@ El balanceo de clases logró solucionar el problema del resultado determinístico 
 Dado el terriblemente bajo porcentaje de aciertos obtenido en esta etapa, en la siguiente etapa se intentará realizar una extracción de características con métodos más sofisticados e intentar explicar el por qué de los resultados tan malos.
 
 \section{Tercera etapa - extración de características}
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 3}
+
+\textcolor{v2}{\textbf{Extracción de características}}
+
+\begin{itemize}
+\item PCA
+\item LDA
+\item Diffusion Maps
+\end{itemize}
+
+\end{frame}
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 3 | PCA}
+
+\end{frame}
+
 
 En la tercera etapa buscaremos realizar extracción de características con el fin de reducir la dimensionalidad y  buscar características con mayor discriminación. 
 
