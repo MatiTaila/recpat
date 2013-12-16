@@ -375,7 +375,46 @@ Dado el terriblemente bajo porcentaje de aciertos obtenido en esta etapa, en la 
 \begin{frame}
 \frametitle{Etapa 3 | PCA}
 
+\textcolor{v2}{\textbf{Resultados de aplicar PCA}}
+
+\begin{figure} [H]
+\centering
+  \subfloat[Características 1-2-3]{\label{fig:pca123} 
+  		\includegraphics[width=.5\textwidth]{pics/pca123.pdf}} 
+  \subfloat[Varianza vs Componentes]{\label{fig:pca143} 
+  		\includegraphics[width=.5\textwidth]{pics/varianzaPCA}} \\
+   \caption{Datos procesados con el algorítmo PCA} 
+  \label{fig:pcas}
+\end{figure}
+
 \end{frame}
+
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 3 | PCA}
+
+\textcolor{v2}{\textbf{Resultados de aplicar PCA}}
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|} 
+	\cline{2-4}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.03 & 0.143 & \cellcolor[gray]{0.9}42.75  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0.02 & 0.091 & \cellcolor[gray]{0.9}39.37 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0    & 0.149 & \cellcolor[gray]{0.9}43.24 \\ \hline
+	\end{tabular} 
+% 	\caption{Resultados etapa 2}
+	\label{tab:resultados_PCA}
+\end{table}
+
+\end{frame}
+
 
 
 En la tercera etapa buscaremos realizar extracción de características con el fin de reducir la dimensionalidad y  buscar características con mayor discriminación. 
@@ -390,7 +429,7 @@ El algoritmo \textbf{PCA} (Análisis de componentes principales) tiene como fin e
 \centering
   \subfloat[Características 1-2-3]{\label{fig:pca123} 
   		\includegraphics[width=.5\textwidth]{pics/pca123.pdf}} 
-  \subfloat[Características 1-4-3]{\label{fig:pca143} 
+  \subfloat[Varianza vs Componentes]{\label{fig:pca143} 
   		\includegraphics[width=.5\textwidth]{pics/pca143.pdf}} \\
 %   \caption{Datos procesados con el algorítmo PCA} 
   \label{fig:pcas}
@@ -454,6 +493,56 @@ Como era de esperarse analizando la distribución de los datos, se obtuvieron res
 
 A su vez, la medida estadística $\bs\kappa$ aumentó un orden de magnitud respecto a la etapa anterior, y dos órdenes respecto a la etapa 1.
 
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 3 | LDA}
+
+\textcolor{v2}{\textbf{Resultados de aplicar LDA}}
+
+\begin{figure}
+%	\hspace{-2.5cm}
+	\centering
+	\includegraphics[scale=0.33]{pics/lda_zoom.pdf}
+ 	\caption{Proyección de los datos aplicando LDA}
+	\label{fig:lda}
+\end{figure}
+
+\begin{table}[H]
+\centering
+	\begin{tabular}{c|c|c|c|} 
+	\cline{2-4}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Tiempo [s]}}  
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} $\bs\kappa$}
+	& \multicolumn{1}{c|}{\cellcolor[gray]{0.7} \textbf{Bien Clasif [\%]}} \\ \hline
+	
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{C4.5}}   & 0.03 & 0.1558 & \cellcolor[gray]{0.9} 43.7198  \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{Bayes}}  & 0 & 0.1667 & \cellcolor[gray]{0.9} 44.4444 \\ \hline
+	\multicolumn{1}{|c|}{\cellcolor[gray]{0.8} \textbf{k-NN}}   & 0 & 0.1196 & \cellcolor[gray]{0.9} 41.3043 \\ \hline
+	\end{tabular} 
+ 	\caption{Resultados etapa 2}
+	\label{tab:resultados_LDA}
+\end{table}
+\end{frame}
+
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 3 | LDA}
+
+\textcolor{v2}{\textbf{Resultados de aplicar LDA}}
+
+\begin{figure}
+	\centering
+	\includegraphics[width=.65\textwidth]{pics/lda_dist.pdf}
+ 	\caption{Estimación de la distribución de los datos}
+	\label{fig:lda_dist}
+\end{figure}
+Se puede corroborar una vez más que las 3 clases son muy dificiles de separar, ya que presentan distribuciones realmente muy similares.
+
+\end{frame}
+
 \subsection{LDA}
 El algorítmo LDA (Análisis de discriminantes lineales) tiene como fin seleccionar una proyección que maximice separabilidad inter-clases. Busca una proyección de los datos en un espacio de menor (o igual) dimensión que las iniciales con el fin de que la disciminabilidad inter-clases sea lo más alta posible. Es una técnica supervisada ya que para poder buscar dicha proyección se debe entrenar el sistema con patrones etiquetados.\\
 
@@ -515,6 +604,22 @@ Para corroborar de otra forma que los datos son efectivamente inconcluyentes se 
 	\label{fig:lda_dist}
 \end{figure}
 Se puede corroborar una vez más que las 3 clases son muy dificiles de separar, ya que presentan distribuciones realmente muy similares.
+
+% ========================= FRAME ===============================
+% ===============================================================
+\begin{frame}
+\frametitle{Etapa 3 | Diffusion Maps}
+
+\textcolor{v2}{\textbf{Resultados de aplicar Diffusion Maps}}
+
+\begin{figure}[H]
+	\centering 
+	\includegraphics[width=.8\textwidth]{./pics/dm.pdf}
+ 	\caption{Diffusion Maps}
+	\label{fig:dm}
+\end{figure}
+
+\end{frame}
 
 \subsection{Diffusion Maps}
 Con el objetivo de probar alguna técnica más sofisticada se utiliza Diffusion Map \cite{bib:diffmap}.\\
